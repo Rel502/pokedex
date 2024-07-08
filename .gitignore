@@ -1,1 +1,4 @@
 /assets/design/Pokedex Checkliste.pdf
+/node_modules
+/package-lock.json
+/package.json

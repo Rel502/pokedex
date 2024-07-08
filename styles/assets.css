@@ -1,0 +1,14 @@
+/* Cards, containing pokemon name, image and short description */
+
+.image-container {
+    height: 150px;
+}
+
+.image-container > img {
+    height: 100%;
+    object-fit: contain;
+}
+
+/* .pokemon-category {
+    background-color: ;
+} */

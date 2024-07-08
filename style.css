@@ -1,0 +1,27 @@
+* {
+    margin-block-start: 0 !important; 
+    margin-block-end: 0 !important; 
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+}
+
+header {
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.3));
+}
+
+header img {
+    height: 24px;
+    object-fit: cover;
+}
+
+.mid-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
