@@ -5,7 +5,9 @@ function init() {
 
 /*<--- NEXT STEPS ------->
 
-1) Type? (Category)
+1) getPokemonType() -> typesArr (wie zeige ich alle types an?)
+    -> for-Schleife?
+    -> ...
 
 2) Hintergrundfarbe der cards, je nach Pokemon 
     -> ref: https://pokeapi.co/docs/v2#pokemon-colors
@@ -28,6 +30,11 @@ async function getData(path="") {
     return responseToJson;
 }
 
+// async function logData() {
+//     let path = "pokemon/1/";
+//     console.log(await getData(path));
+// }
+
 async function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = '';
@@ -35,11 +42,19 @@ async function renderCards() {
     for (let i = 1; i < count; i++) {
         let pokemonRef = await getData(`pokemon/${i}`); /*<--- Reference for single pokemon by ID */
         let name = pokemonRef['name'];
-        let type = "placeholderType"; /*<--- Fire, Water, etc.? */
+        // let type = pokemonRef['types'][0]['type']['name'];
+        let type = await getPokemonType(pokemonRef); 
         let pokemonImg = await getPokemonImg(pokemonRef);
 
         content.innerHTML += generateCard(name, type, pokemonImg);
     }
+}
+
+async function getPokemonType(pokemonRef) {
+    let typesArr = await pokemonRef.types;
+    let type = typesArr[0]['type']['name'];
+
+    return type;
 }
 
 async function getPokemonImg(pokemonRef) {
