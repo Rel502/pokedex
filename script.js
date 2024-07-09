@@ -42,7 +42,6 @@ async function renderCards() {
     for (let i = 1; i < count; i++) {
         let pokemonRef = await getData(`pokemon/${i}`); /*<--- Reference for single pokemon by ID */
         let name = pokemonRef['name'];
-        // let type = pokemonRef['types'][0]['type']['name'];
         let type = await getPokemonType(pokemonRef); 
         let pokemonImg = await getPokemonImg(pokemonRef);
 
@@ -52,9 +51,17 @@ async function renderCards() {
 
 async function getPokemonType(pokemonRef) {
     let typesArr = await pokemonRef.types;
+    let allTypes = [];
+
+    for (let i = 0; i < typesArr.length; i++) {
+        let type = typesArr[i]['type']['name'];
+        allTypes.push(type);
+    }
+
     let type = typesArr[0]['type']['name'];
 
-    return type;
+    return allTypes.join(', ');
+    // return type;
 }
 
 async function getPokemonImg(pokemonRef) {
