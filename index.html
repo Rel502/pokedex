@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="./styles/assets.css">
     <link rel="stylesheet" href="./styles/standard.css">
     <link rel="stylesheet" href="style.css">
-    <!-- SCRIPTS -->
-    <script src="./scripts/templates.js"></script>
-    <script src="script.js"></script>
 </head>
 
 <body onload="init()">
@@ -29,14 +26,15 @@
         </nav>
     </header>
 
-    <main class="d-flex justify-content-center mt-3">
-        <section class="mid-content-wrapper">
+    <main class="d-flex flex-column align-items-center justify-content-center mt-3">
+        <section id="content" class="mid-content-wrapper">
             <!-- CARD -->
-            <div class="card" style="width: 18rem;">
+
+            <!-- <div class="card" style="width: 18rem;">
                 <h2 class="card-title text-center m-2 mb-3">${name}</h2>
 
                 <div class="image-container">
-                    <img src="./assets/img/favicon.png" class="card-img-top" alt="...">
+                    <img id="pokeImg" src="./assets/img/favicon.png" class="card-img-top" alt="...">
                 </div>
 
                 <div class="pokemon-category card m-3">
@@ -44,14 +42,16 @@
                         <h5>${category}</h5>
                     </div>
                 </div>
-            </div>
+            </div> -->
+
             <!---------->
         </section>
-
-
-
+        <img onclick="increasePokeCount()" class="icons pointer m-2" src="./assets/icons/more.png" alt="">
     </main>
 
+    <!-- SCRIPTS -->
+    <script src="./scripts/templates.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

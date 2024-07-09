@@ -2,3 +2,13 @@
     margin-block-start: 0;
     margin-block-end: 0;
 }
+
+.icons {
+    height: 24px;
+    width: 24px;
+    object-fit: cover;
+}
+
+.pointer:hover {
+    cursor: pointer;
+}
