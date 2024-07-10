@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <link rel="shortcut icon" href="./assets/img/pokeball.png" type="image/x-icon">
+    <!-- FONTS GOOGLE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marhey:wght@300..700&display=swap" rel="stylesheet">
+
     <!-- BOOTSTRAP - CSS -->
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
 
@@ -16,12 +21,12 @@
 </head>
 
 <body onload="init()">
-    <header>
+    <header class="sticky-top">
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex gap-2 align-items-center" href="#">
+                <a class="navbar-brand d-flex gap-2 align-items-start" href="#">
                     <img src="./assets/img/pokeball.png" alt="Logo" class="d-inline-block align-text-top">
-                    Pokedex
+                    <span class="marhey-bold align-with-logo">Pokedex</span>
                 </a>
             </div>
         </nav>
