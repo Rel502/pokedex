@@ -5,6 +5,10 @@
     border-radius: 10px;
 }
 
+.card:hover {
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.7));
+}
+
 .image-container {
     height: 150px;
 }
@@ -14,8 +18,8 @@
     object-fit: contain;
 }
 
-.image-container > img:hover {
-    filter: drop-shadow(2px 4px 6px black);
+.pokemon-category {
+    background-color: rgba(0,0,0,0.3);
 }
 
 .pokemon-category img {
@@ -23,10 +27,39 @@
     width: 32px;
 }
 
+/* round bg behind type-images */
+
 .type-container {
     border-radius: 50%;
     padding: 8px;
-    background-color: #333;
+}
+
+.type-container-grass {
+    background-color: lightgreen;
+}
+
+.type-container-poison {
+    background-color: rgb(200 255 121);
+}
+
+.type-container-fire {
+    background-color: #ff8e8e;
+}
+
+.type-container-water {
+    background-color: rgb(48, 48, 255);
+}
+
+.type-container-flying {
+    background-color: rgb(171, 255, 255);
+}
+
+.type-container-bug {
+    background-color: burlywood;
+}
+
+.type-container-normal {
+    background-color: #444444;
 }
 
 /* bg colors based on type */

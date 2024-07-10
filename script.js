@@ -34,19 +34,29 @@ async function renderCards() {
     content.innerHTML = '';
 
     for (let i = 1; i < count; i++) {
-        let pokemonRef = await getData(`pokemon/${i}`); /*<--- Reference for single pokemon by ID */
+        let pokemonRef = await getData(`pokemon/${i}`); 
         let name = pokemonRef['name'];
-        let allTypes = await getPokemonType(pokemonRef); 
+        let allTypes = await getPokemonTypes(i, pokemonRef); 
         let pokemonImg = await getPokemonImg(pokemonRef);
-        let bgColor = await setBgColor(allTypes);   /*<--- bg color of card, based on type */
+        let bgColor = await setBgColor(allTypes);  
 
         content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
+        renderTypeImages(allTypes, i);
+    }
+}
+
+function renderTypeImages(allTypes, i) {
+    let typesContainer = document.getElementById(`typesContainer${i}`);
+
+    for (let j = 0; j < allTypes.length; j++) {
+        let srcRef = "./assets/img/types/" +  allTypes[j] + ".png";
+        typesContainer.innerHTML += generateTypeIcon(allTypes[j], srcRef);
     }
 }
 
 /*<--- getPokemonType -------> */
 
-async function getPokemonType(pokemonRef) {
+async function getPokemonTypes(i, pokemonRef) {
     let typesArr = await pokemonRef['types'];
     let allTypes = [];
 
@@ -56,41 +66,8 @@ async function getPokemonType(pokemonRef) {
     }
 
     let type = typesArr[0]['type']['name'];
-    return allTypes.join(', ');
+    return allTypes;
 }
-
-// async function getPokemonType(id, pokemonRef) {
-//     let typesArr = await pokemonRef.types;
-//     let allTypes = [];
-//     let typesContainer = document.getElementById(`typesContainer${id}`);
-
-//     for (let i = 0; i < typesArr.length; i++) {
-//         let type = typesArr[i]['type']['name'];
-//         allTypes.push(type);
-
-//         typesContainer.innerHTML = '';
-//         typesContainer.innerHTML += `
-//             <div class="type-container">
-//                 <img src="./assets/img/types/${type}.png">
-//             </div>
-//         `;
-//     }
-
-//     let type = typesArr[0]['type']['name'];
-//     return allTypes.join(', ');
-// }
-
-
-
-
-
-
-
-
-
-
-
-
 
 function setBgColor(allTypes) {
     if (allTypes.includes('grass')) {
@@ -132,13 +109,6 @@ function increasePokeCount() {
 
 
 /*---> Types <------- 
-
-// ELEMENT Types
-    -> Ground
-    -> Fire
-    -> Water
-    -> Grass
-
 
 // Normal: 1  <--- ID
 // Fighting: 2  -> fighting.png
