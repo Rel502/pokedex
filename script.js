@@ -23,17 +23,11 @@ const BASE_URL = "https://pokeapi.co/api/v2/";
 
 let count = 20;
 
-// GET and RETURN data from PokeAPI
 async function getData(path="") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
     return responseToJson;
 }
-
-// async function logData() {
-//     let path = "pokemon/1/";
-//     console.log(await getData(path));
-// }
 
 async function renderCards() {
     let content = document.getElementById('content');
@@ -42,15 +36,18 @@ async function renderCards() {
     for (let i = 1; i < count; i++) {
         let pokemonRef = await getData(`pokemon/${i}`); /*<--- Reference for single pokemon by ID */
         let name = pokemonRef['name'];
-        let type = await getPokemonType(pokemonRef); 
+        let allTypes = await getPokemonType(pokemonRef); 
         let pokemonImg = await getPokemonImg(pokemonRef);
+        let bgColor = await setBgColor(allTypes);   /*<--- bg color of card, based on type */
 
-        content.innerHTML += generateCard(name, type, pokemonImg);
+        content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
     }
 }
 
+/*<--- getPokemonType -------> */
+
 async function getPokemonType(pokemonRef) {
-    let typesArr = await pokemonRef.types;
+    let typesArr = await pokemonRef['types'];
     let allTypes = [];
 
     for (let i = 0; i < typesArr.length; i++) {
@@ -59,10 +56,55 @@ async function getPokemonType(pokemonRef) {
     }
 
     let type = typesArr[0]['type']['name'];
-
     return allTypes.join(', ');
-    // return type;
 }
+
+// async function getPokemonType(id, pokemonRef) {
+//     let typesArr = await pokemonRef.types;
+//     let allTypes = [];
+//     let typesContainer = document.getElementById(`typesContainer${id}`);
+
+//     for (let i = 0; i < typesArr.length; i++) {
+//         let type = typesArr[i]['type']['name'];
+//         allTypes.push(type);
+
+//         typesContainer.innerHTML = '';
+//         typesContainer.innerHTML += `
+//             <div class="type-container">
+//                 <img src="./assets/img/types/${type}.png">
+//             </div>
+//         `;
+//     }
+
+//     let type = typesArr[0]['type']['name'];
+//     return allTypes.join(', ');
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+function setBgColor(allTypes) {
+    if (allTypes.includes('grass')) {
+        return "bg-color-grass";
+    } else if (allTypes.includes('fire')) {
+        return "bg-color-fire";
+    } else if (allTypes.includes('water')) {
+        return "bg-color-water";
+    } else if (allTypes.includes('bug')) {
+        return "bg-color-bug";
+    } else if (allTypes.includes('normal')) {
+        return "bg-color-normal";
+    } 
+} 
 
 async function getPokemonImg(pokemonRef) {
     let pokemonImage = pokemonRef['sprites']['front_default'];
@@ -82,25 +124,39 @@ function increasePokeCount() {
 
 
 
+
+
+
+
+
+
+
 /*---> Types <------- 
 
+// ELEMENT Types
+    -> Ground
+    -> Fire
+    -> Water
+    -> Grass
+
+
 // Normal: 1  <--- ID
-// Fighting: 2
-// Flying: 3
-// Poison: 4
-// Ground: 5
-// Rock: 6
-// Bug: 7
-// Ghost: 8
-// Steel: 9
-// Fire: 10
-// Water: 11
-// Grass: 12
-// Electric: 13
-// Psychic: 14
-// Ice: 15
-// Dragon: 16
-// Dark: 17
-// Fairy: 18
+// Fighting: 2  -> fighting.png
+// Flying: 3    -> flying.png
+// Poison: 4    -> poison.png
+// Ground: 5    -> ground.png
+// Rock: 6      -> rock.png
+// Bug: 7       -> bug.png
+// Ghost: 8     -> ghost.png
+// Steel: 9     -> steel.png
+// Fire: 10     -> fire.png
+// Water: 11    -> water.png
+// Grass: 12    -> grass.png
+// Electric: 13 -> electric.png
+// Psychic: 14  -> psychic.png
+// Ice: 15      -> ice.png
+// Dragon: 16   -> dragon.png
+// Dark: 17     -> dark.png
+// Fairy: 18    -> fairy.png
 
 -----------------> */

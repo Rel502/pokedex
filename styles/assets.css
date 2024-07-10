@@ -1,5 +1,10 @@
 /* Cards, containing pokemon name, image and short description */
 
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
 .image-container {
     height: 150px;
 }
@@ -9,6 +14,77 @@
     object-fit: contain;
 }
 
-/* .pokemon-category {
-    background-color: ;
-} */
+.image-container > img:hover {
+    filter: drop-shadow(2px 4px 6px black);
+}
+
+.pokemon-category img {
+    height: 32px;
+    width: 32px;
+}
+
+.type-container {
+    border-radius: 50%;
+    padding: 8px;
+    background-color: #333;
+}
+
+/* bg colors based on type */
+
+.bg-color-grass {
+    background-color: green;
+}
+
+.bg-color-grass:hover {
+    background-color: rgb(0, 158, 0);
+}
+
+.bg-color-fire {
+    background-color: rgb(169, 0, 0);
+}
+
+.bg-color-fire:hover {
+    background-color: rgb(198, 0, 0);
+}
+
+.bg-color-water {
+    background-color: blue;
+}
+
+.bg-color-water:hover {
+    background-color: rgb(71, 71, 255);
+}
+
+.bg-color-bug {
+    background-color: darkorange;
+}
+
+.bg-color-bug:hover {
+    background-color: rgb(255, 164, 54);
+}
+
+.bg-color-normal {
+    background-color: #333;
+    color: white;
+}
+
+.bg-color-normal:hover {
+    background-color: #444444;
+    color: white;
+}
+
+/* custom scrollbar */
+
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #242424;
+    border-radius: 10px;
+    border: 3px none #ffffff;
+  }

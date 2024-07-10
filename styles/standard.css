@@ -12,3 +12,11 @@
 .pointer:hover {
     cursor: pointer;
 }
+
+.color-white {
+    color: white;
+}
+
+.bg-color-333 {
+    background-color: #333;
+}
