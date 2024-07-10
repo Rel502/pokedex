@@ -22,7 +22,9 @@ header img {
 
 .mid-content-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
     gap: 16px;
 }
 
