@@ -75,37 +75,3 @@ function increasePokeCount() {
     }
     renderCards();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*---> Types <------- 
-
-// Normal: 1  <--- ID
-// Fighting: 2  -> fighting.png
-// Flying: 3    -> flying.png
-// Poison: 4    -> poison.png
-// Ground: 5    -> ground.png
-// Rock: 6      -> rock.png
-// Bug: 7       -> bug.png
-// Ghost: 8     -> ghost.png
-// Steel: 9     -> steel.png
-// Fire: 10     -> fire.png
-// Water: 11    -> water.png
-// Grass: 12    -> grass.png
-// Electric: 13 -> electric.png
-// Psychic: 14  -> psychic.png
-// Ice: 15      -> ice.png
-// Dragon: 16   -> dragon.png
-// Dark: 17     -> dark.png
-// Fairy: 18    -> fairy.png
-
------------------> */

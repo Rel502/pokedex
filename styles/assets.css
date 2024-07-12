@@ -43,82 +43,157 @@
     width: 32px;
 }
 
-/* round bg behind type-images */
+/* circle .parent behind type-images */
 
 .type-container {
     border-radius: 50%;
     padding: 8px;
 }
 
-.type-container-grass {
-    background-color: lightgreen;
-}
-
-.type-container-poison {
-    background-color: rgb(200 255 121);
-}
-
-.type-container-fire {
-    background-color: #ff8e8e;
-}
-
-.type-container-water {
-    background-color: rgb(48, 48, 255);
-}
-
-.type-container-flying {
-    background-color: rgb(171, 255, 255);
-}
-
-.type-container-bug {
-    background-color: burlywood;
-}
-
-.type-container-normal {
-    background-color: #444444;
-}
-
 /* bg colors based on type */
 
-.bg-color-grass {
-    background-color: green;
+.bg-color-normal, .type-container-normal {
+    background-color: rgba(168, 168, 120, 1); /* Beige */
 }
 
-.bg-color-grass:hover {
-    background-color: rgb(0, 158, 0);
+.bg-color-fighting, .type-container-fighting {
+    background-color: rgba(192, 48, 40, 1); /* Dunkelrot */
 }
 
-.bg-color-fire {
-    background-color: rgb(169, 0, 0);
+.bg-color-flying, .type-container-flying {
+    background-color: rgba(168, 144, 240, 1); /* Hellblau */
 }
 
-.bg-color-fire:hover {
-    background-color: rgb(198, 0, 0);
+.bg-color-poison, .type-container-poison {
+    background-color: rgba(160, 64, 160, 1); /* Violett */
 }
 
-.bg-color-water {
-    background-color: blue;
+.bg-color-ground, .type-container-ground {
+    background-color: rgba(224, 192, 104, 1); /* Braun */
 }
 
-.bg-color-water:hover {
-    background-color: rgb(71, 71, 255);
+.bg-color-rock, .type-container-rock {
+    background-color: rgba(184, 160, 56, 1); /* Dunkelbeige */
 }
 
-.bg-color-bug {
-    background-color: darkorange;
+.bg-color-bug, .type-container-bug {
+    background-color: rgba(168, 184, 32, 1); /* Grün */
+}
+
+.bg-color-ghost, .type-container-ghost {
+    background-color: rgba(112, 88, 152, 1); /* Dunkelviolett */
+}
+
+.bg-color-steel, .type-container-steel {
+    background-color: rgba(184, 184, 208, 1); /* Grau */
+}
+
+.bg-color-fire, .type-container-fire {
+    background-color: rgba(240, 128, 48, 1); /* Orange */
+}
+
+.bg-color-water, .type-container-water {
+    background-color: rgba(104, 144, 240, 1); /* Blau */
+}
+
+.bg-color-grass, .type-container-grass {
+    background-color: rgba(120, 200, 80, 1); /* Grün */
+}
+
+.bg-color-electric, .type-container-electric {
+    background-color: rgba(248, 208, 48, 1); /* Gelb */
+}
+
+.bg-color-psychic, .type-container-psychic {
+    background-color: rgba(248, 88, 136, 1); /* Rosa */
+}
+
+.bg-color-ice, .type-container-ice {
+    background-color: rgba(152, 216, 216, 1); /* Hellblau */
+}
+
+.bg-color-dragon, .type-container-dragon {
+    background-color: rgba(112, 56, 248, 1); /* Dunkelblau */
+}
+
+.bg-color-dark, .type-container-dark {
+    background-color: rgba(112, 88, 72, 1); /* Dunkelbraun */
+}
+
+.bg-color-fairy, .type-container-fairy {
+    background-color: rgba(238, 153, 172, 1); /* Hellrosa */
+}
+
+/* Hover effect on card, based on bg-colors */
+
+.bg-color-normal:hover {
+    background-color: rgba(168, 168, 120, 0.7); /* Beige */
+}
+
+.bg-color-fighting:hover {
+    background-color: rgba(192, 48, 40, 0.7); /* Dunkelrot */
+}
+
+.bg-color-flying:hover {
+    background-color: rgba(168, 144, 240, 0.7); /* Hellblau */
+}
+
+.bg-color-poison:hover {
+    background-color: rgba(160, 64, 160, 0.7); /* Violett */
+}
+
+.bg-color-ground:hover {
+    background-color: rgba(224, 192, 104, 0.7); /* Braun */
+}
+
+.bg-color-rock:hover {
+    background-color: rgba(184, 160, 56, 0.7); /* Dunkelbeige */
 }
 
 .bg-color-bug:hover {
-    background-color: rgb(255, 164, 54);
+    background-color: rgba(168, 184, 32, 0.7); /* Grün */
 }
 
-.bg-color-normal {
-    background-color: #333;
-    color: white;
+.bg-color-ghost:hover {
+    background-color: rgba(112, 88, 152, 0.7); /* Dunkelviolett */
 }
 
-.bg-color-normal:hover {
-    background-color: #444444;
-    color: white;
+.bg-color-steel:hover {
+    background-color: rgba(184, 184, 208, 0.7); /* Grau */
 }
 
+.bg-color-fire:hover {
+    background-color: rgba(240, 128, 48, 0.7); /* Orange */
+}
+
+.bg-color-water:hover {
+    background-color: rgba(104, 144, 240, 0.7); /* Blau */
+}
+
+.bg-color-grass:hover {
+    background-color: rgba(120, 200, 80, 0.7); /* Grün */
+}
+
+.bg-color-electric:hover {
+    background-color: rgba(248, 208, 48, 0.7); /* Gelb */
+}
+
+.bg-color-psychic:hover {
+    background-color: rgba(248, 88, 136, 0.7); /* Rosa */
+}
+
+.bg-color-ice:hover {
+    background-color: rgba(152, 216, 216, 0.7); /* Hellblau */
+}
+
+.bg-color-dragon:hover {
+    background-color: rgba(112, 56, 248, 0.7); /* Dunkelblau */
+}
+
+.bg-color-dark:hover {
+    background-color: rgba(112, 88, 72, 0.7); /* Dunkelbraun */
+}
+
+.bg-color-fairy:hover {
+    background-color: rgba(238, 153, 172, 0.7); /* Hellrosa */
+}
