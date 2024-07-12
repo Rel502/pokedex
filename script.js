@@ -5,7 +5,7 @@ function init() {
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
-let count = 20;
+let pokemonCount = 20;
 
 async function getData(path="") {
     let response = await fetch(BASE_URL + path);
@@ -17,7 +17,7 @@ async function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
-    for (let i = 1; i < count; i++) {   /*<--- ! Auslagern */
+    for (let i = 1; i < pokemonCount; i++) {   /*<--- ! Auslagern */
         let pokemonRef = await getData(`pokemon/${i}`); 
         let name = pokemonRef['name'];
         let allTypes = await getPokemonTypes(pokemonRef); 
@@ -29,6 +29,58 @@ async function renderCards() {
         renderTypeImages(allTypes, i);
     }
 }
+
+function openCardInfo(image, bgColor) {
+    showPopup();
+    
+    let imageBackground = document.getElementById('overlayImgContainer');
+    imageBackground.classList = [];
+    
+    imageBackground.classList.add('overlay-img-container');
+    imageBackground.classList.add(`${bgColor}`);
+
+    let currentImage = document.getElementById('currentImage');
+    currentImage.src = image;
+}
+
+function showPopup() {
+    toggleAnythingElse();
+}
+
+function closePopup(bgColor) {
+    toggleAnythingElse();
+}
+
+function toggleAnythingElse() {
+    togglePopup();
+    toggleHeader();
+    toggleScrollbar();
+}
+
+function togglePopup() {
+    document.getElementById('popupOverlayBg').classList.toggle('d-none');
+}
+
+function toggleHeader() {
+    document.querySelector('header').classList.toggle('d-none');
+}
+
+function toggleScrollbar() {
+    document.querySelector('body').classList.toggle('overflow-hidden');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function renderTypeImages(allTypes, i) {
     let typesContainer = document.getElementById(`typesContainer${i}`);
@@ -68,8 +120,8 @@ async function getPokemonImg(pokemonRef) {
 }
 
 function increasePokeCount() {
-    if (count < 151) {
-        count += 20;    
+    if (pokemonCount < 151) {
+        pokemonCount += 20;    
     } else {
         return;
     }

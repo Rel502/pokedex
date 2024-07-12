@@ -51,9 +51,24 @@
             </div> -->
 
             <!---------->
+
+
+
         </section>
         <img onclick="increasePokeCount()" class="icons pointer m-2" src="./assets/icons/more.png" alt="">
+
     </main>
+
+    <div id="popupOverlayBg" class="popup-overlay-bg d-none">
+        <div id="overlayImgContainer" class="overlay-img-container">
+            <!-- Close Icon -->
+            <div onclick="closePopup()" class="icon-container pointer d-flex justify-content-center align-items-center">
+                <img class="icons" src="./assets/icons/close.png" alt="close">
+            </div>
+            <!-- Pokemon Image -->
+            <img id="currentImage" src="" alt="">
+        </div>
+    </div>
 
     <script src="./scripts/templates.js"></script>
     <script src="script.js"></script>

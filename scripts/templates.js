@@ -1,7 +1,7 @@
 function generateCard(id, name, image, bgColor) {
     return /*html*/`
         <!-- CARD -->
-        <div class="card pointer ${bgColor}" style="width: 18rem;">
+        <div onclick="openCardInfo('${image}', '${bgColor}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
             <div class="bg-color-333 color-white">
                 <h2 class="card-title text-center m-2">#${id}  ${name}</h2>
             </div>
