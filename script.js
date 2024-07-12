@@ -3,22 +3,6 @@ function init() {
     renderCards();
 }
 
-/*<--- NEXT STEPS ------->
-
-1) getPokemonType() -> typesArr (wie zeige ich alle types an?)
-    -> for-Schleife?
-    -> ...
-
-2) Hintergrundfarbe der cards, je nach Pokemon 
-    -> ref: https://pokeapi.co/docs/v2#pokemon-colors
-
-3) Mehr Pokemon rendern, ...
-    -> ... 20 - 40 direkt
-    -> weitere 20 - 40 bei Klick auf "more" icon
-
-------------------------->*/
-
-
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
 let count = 20;
@@ -33,12 +17,13 @@ async function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
-    for (let i = 1; i < count; i++) {
+    for (let i = 1; i < count; i++) {   /*<--- ! Auslagern */
         let pokemonRef = await getData(`pokemon/${i}`); 
         let name = pokemonRef['name'];
-        let allTypes = await getPokemonTypes(i, pokemonRef); 
+        let allTypes = await getPokemonTypes(pokemonRef); 
+        let mainType = await getMainType(allTypes);
         let pokemonImg = await getPokemonImg(pokemonRef);
-        let bgColor = await setBgColor(allTypes);  
+        let bgColor = await setBgColor(mainType);
 
         content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
         renderTypeImages(allTypes, i);
@@ -54,9 +39,7 @@ function renderTypeImages(allTypes, i) {
     }
 }
 
-/*<--- getPokemonType -------> */
-
-async function getPokemonTypes(i, pokemonRef) {
+async function getPokemonTypes(pokemonRef) {
     let typesArr = await pokemonRef['types'];
     let allTypes = [];
 
@@ -65,23 +48,19 @@ async function getPokemonTypes(i, pokemonRef) {
         allTypes.push(type);
     }
 
-    let type = typesArr[0]['type']['name'];
     return allTypes;
 }
 
-function setBgColor(allTypes) {
-    if (allTypes.includes('grass')) {
-        return "bg-color-grass";
-    } else if (allTypes.includes('fire')) {
-        return "bg-color-fire";
-    } else if (allTypes.includes('water')) {
-        return "bg-color-water";
-    } else if (allTypes.includes('bug')) {
-        return "bg-color-bug";
-    } else if (allTypes.includes('normal')) {
-        return "bg-color-normal";
-    } 
-} 
+async function getMainType(allTypes) {
+    let mainType = allTypes[0];
+    return mainType;
+}
+
+function setBgColor(mainType) {
+    let bgColor = `bg-color-${mainType}`;
+    return bgColor;
+
+}  
 
 async function getPokemonImg(pokemonRef) {
     let pokemonImage = pokemonRef['sprites']['front_default'];
