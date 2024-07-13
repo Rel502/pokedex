@@ -1,7 +1,7 @@
 function generateCard(id, name, pokemonImg, bgColor) {
     return /*html*/`
         <!-- CARD -->
-        <div onclick="renderCardInfo('${pokemonImg}', '${bgColor}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
+        <div onclick="renderCardInfo('${id}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
             <div class="bg-color-333 color-white">
                 <h2 class="card-title text-center m-2">#${id}  ${name}</h2>
             </div>
@@ -31,4 +31,45 @@ function generateTypeIcon(type, srcRef) {
             <img src=${srcRef}>
         </div>
     `;
+}
+
+function generateCardDescription(pokemonImg, pokemonName, mainType, pokemonDescr) {
+    return /*html*/`
+    <section id="overlayImgContainer" class="overlay-img-container">
+        <!-- Close Icon -->
+        <div onclick="closePopup()" class="icon-container pointer d-flex justify-content-center align-items-center">
+            <img class="icons" src="./assets/icons/close.png" alt="close">
+        </div>
+        <!-- Pokemon Image -->
+        <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
+            <img class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
+            <img id="currentImage" src="${pokemonImg}" alt="">
+            <img class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
+        </div>
+    </section>
+
+    <section class="overlay-content-section">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Stats</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Evolution</a>
+            </li>
+        </ul>
+
+        <!-- Type -->
+        <div class="mt-2 mb-2">
+            <h5 class="mb-2">Type</h5>
+            <p>${pokemonName} is a ${mainType} Pokemon.</p>
+        </div>
+        <div class="mb-2">
+            <h5 class="mb-2">Description</h5>
+            <p>${pokemonDescr}</p>
+        </div>
+    </section>
+`;
 }

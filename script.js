@@ -19,22 +19,23 @@ async function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
-    for (let i = 1; i < pokemonCount; i++) {   
+    for (let i = 1; i < pokemonCount; i++) {
         await prepareRendering(i, content);
     }
 }
 
 
 async function prepareRendering(i, content) {
-    let pokemonRef = await getData(`pokemon/${i}`); 
-    let name = pokemonRef['name'];
-    let allTypes = await getPokemonTypes(pokemonRef); 
+    let pokemonRef = await getData(`pokemon/${i}`);
+    let name = await getPokemonName(pokemonRef);
+    // let name = pokemonRef['name'];
+    let allTypes = await getPokemonTypes(pokemonRef);
     let mainType = await getMainType(allTypes);
     let pokemonImg = await getPokemonImg(i);
     let bgColor = await setBgColor(mainType);
 
     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
-    renderTypeImages(allTypes, i);
+    renderTypeImages(`typesContainer${i}`, allTypes, i);
 }
 
 
@@ -45,23 +46,52 @@ async function getPokemonImg(i) {
 }
 
 
-function renderCardInfo(image, bgColor) {
+async function getPokemonName(pokemonRef) { 
+    let name = await pokemonRef['name'];
+    let nameInUpperCase = name.toUpperCase();
+
+    let firstLetter = nameInUpperCase.slice(0, 1);
+    let elseLetters = name.slice(1);
+
+    return firstLetter + elseLetters;
+}
+
+
+async function renderCardInfo(id) {
     showPopup();
 
+    // Notwendige Variablen definieren
+    let pokemonRef = await getData(`pokemon/${id}`);
+    let pokemonName = await getPokemonName(pokemonRef);
     
+    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
+    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
 
+    let allTypes = await getPokemonTypes(pokemonRef);          /*<- Alle Typen des Pokemons */
+    let mainType = await getMainType(allTypes);                /*<- Primärtyp des Pokemons */
+    let pokemonImg = await getPokemonImg(id);                  /*<- Bild des Pokemons */
+    let bgColor = await setBgColor(mainType);
 
+    // HTML generieren
+    let cardContent = document.getElementById('popupOverlayBg');
+    cardContent.innerHTML = '';
 
+    cardContent.innerHTML += generateCardDescription(pokemonImg, pokemonName, mainType, pokemonDescr);
 
-    insertOverlayImage(image, bgColor);
-
-    // -> show next / previous image
-    // -> cardInfoContent
-    // -> description
-    // -> stats
-    // -> evolution chain
-
+    // renderTypeImages('typesContainerCard', allTypes, id);
+    insertOverlayImage(pokemonImg, bgColor);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 function insertOverlayImage(image, bgColor) {
@@ -108,8 +138,8 @@ function toggleScrollbar() {
 }
 
 
-function renderTypeImages(allTypes, i) {
-    let typesContainer = document.getElementById(`typesContainer${i}`);
+function renderTypeImages(container, allTypes, i) {
+    let typesContainer = document.getElementById(container);
 
     for (let j = 0; j < allTypes.length; j++) {
         let srcRef = "./assets/img/types/" + allTypes[j] + ".png";

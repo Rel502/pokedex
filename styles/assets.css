@@ -90,6 +90,15 @@
     padding: 8px;
 }
 
+/* Content Section of overlay popup */
+
+.overlay-content-section {
+    height: 65vh;
+    background-color: #242424;
+    padding: 16px 16px;
+    color: white;
+}
+
 /* bg colors based on type */
 
 .bg-color-normal, .type-container-normal {
