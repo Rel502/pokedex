@@ -63,25 +63,30 @@ async function renderCardInfo(id) {
     // Notwendige Variablen definieren
     let pokemonRef = await getData(`pokemon/${id}`);
     let pokemonName = await getPokemonName(pokemonRef);
-    
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
     let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
-
-    let allTypes = await getPokemonTypes(pokemonRef);          /*<- Alle Typen des Pokemons */
-    let mainType = await getMainType(allTypes);                /*<- Primärtyp des Pokemons */
-    let pokemonImg = await getPokemonImg(id);                  /*<- Bild des Pokemons */
+    let allTypes = await getPokemonTypes(pokemonRef);          
+    let mainType = await getMainType(allTypes);                
+    let pokemonImg = await getPokemonImg(id);                  
     let bgColor = await setBgColor(mainType);
 
     // HTML generieren
     let cardContent = document.getElementById('popupOverlayBg');
     cardContent.innerHTML = '';
 
-    cardContent.innerHTML += generateCardDescription(pokemonImg, pokemonName, mainType, pokemonDescr);
+    cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
 
     // renderTypeImages('typesContainerCard', allTypes, id);
     insertOverlayImage(pokemonImg, bgColor);
 }
 
+
+function nextPokemon(id) {
+    id++;
+    console.log(id);
+
+    renderCardInfo(id);
+}
 
 
 
@@ -107,34 +112,46 @@ function insertOverlayImage(image, bgColor) {
 
 
 function showPopup() {
-    toggleAnythingElse();
+    togglePopup('show');
+    toggleHeader('hide');
+    toggleScrollbar('hide');
 }
 
 
 function closePopup() {
-    toggleAnythingElse();
+    togglePopup('hide');
+    toggleHeader('show');
+    toggleScrollbar('show');
 }
 
 
-function toggleAnythingElse() {
-    togglePopup();
-    toggleHeader();
-    toggleScrollbar();
+function togglePopup(param) {
+    if (param == 'show') {
+        document.getElementById('popupOverlayBg').classList.remove('d-none');
+    } else {
+        document.getElementById('popupOverlayBg').classList.add('d-none');
+    }
 }
 
 
-function togglePopup() {
-    document.getElementById('popupOverlayBg').classList.toggle('d-none');
+function toggleHeader(param) {
+    if (param == 'show') {
+        document.querySelector('header').classList.remove('d-none');
+    } else {
+        document.querySelector('header').classList.add('d-none');
+    }
+    // document.querySelector('header').classList.toggle('d-none');
 }
 
 
-function toggleHeader() {
-    document.querySelector('header').classList.toggle('d-none');
-}
+function toggleScrollbar(param) {
+    if (param == 'show') {
+        document.querySelector('body').classList.remove('overflow-hidden');
+    } else {
+        document.querySelector('body').classList.add('overflow-hidden');
+    }
 
-
-function toggleScrollbar() {
-    document.querySelector('body').classList.toggle('overflow-hidden');
+    // document.querySelector('body').classList.toggle('overflow-hidden');
 }
 
 

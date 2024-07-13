@@ -33,7 +33,7 @@ function generateTypeIcon(type, srcRef) {
     `;
 }
 
-function generateCardDescription(pokemonImg, pokemonName, mainType, pokemonDescr) {
+function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr) {
     return /*html*/`
     <section id="overlayImgContainer" class="overlay-img-container">
         <!-- Close Icon -->
@@ -42,9 +42,11 @@ function generateCardDescription(pokemonImg, pokemonName, mainType, pokemonDescr
         </div>
         <!-- Pokemon Image -->
         <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
+            <!-- Previous Pokemon -->
             <img class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
             <img id="currentImage" src="${pokemonImg}" alt="">
-            <img class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
+            <!-- Next Pokemon -->
+            <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
         </div>
     </section>
 
