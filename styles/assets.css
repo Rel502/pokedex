@@ -55,17 +55,29 @@
     background-color: rgba(0,0,0,0.5);
 }
 
+@media (min-width: 769px) {
+    .overlay-outer-div {
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 1025px) {
+    .overlay-outer-div {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        margin: 0 auto;
+    }
+}
+
 .overlay-img-container {
     position: relative;
     height: 35vh;
     background-color: white;
 }
-
-/* .overlay-img-container > img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-} */
 
 #currentImage {
     width: 100%;

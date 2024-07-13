@@ -35,43 +35,45 @@ function generateTypeIcon(type, srcRef) {
 
 function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr) {
     return /*html*/`
-    <section id="overlayImgContainer" class="overlay-img-container">
-        <!-- Close Icon -->
-        <div onclick="closePopup()" class="icon-container pointer d-flex justify-content-center align-items-center">
-            <img class="icons" src="./assets/icons/close.png" alt="close">
-        </div>
-        <!-- Pokemon Image -->
-        <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
-            <!-- Previous Pokemon -->
-            <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
-            <img id="currentImage" src="${pokemonImg}" alt="">
-            <!-- Next Pokemon -->
-            <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
-        </div>
-    </section>
+        <div class="overlay-outer-div">
+            <section id="overlayImgContainer" class="overlay-img-container">
+                <!-- Close Icon -->
+                <div onclick="closePopup()" class="icon-container pointer d-flex justify-content-center align-items-center">
+                    <img class="icons" src="./assets/icons/close.png" alt="close">
+                </div>
+                <!-- Pokemon Image -->
+                <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
+                    <!-- Previous Pokemon -->
+                    <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
+                    <img id="currentImage" src="${pokemonImg}" alt="">
+                    <!-- Next Pokemon -->
+                    <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
+                </div>
+            </section>
 
-    <section class="overlay-content-section">
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Stats</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Evolution</a>
-            </li>
-        </ul>
+            <section class="overlay-content-section">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Stats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Evolution</a>
+                    </li>
+                </ul>
 
-        <!-- Type -->
-        <div class="mt-2 mb-2">
-            <h5 class="mb-2">Primärtyp</h5>
-            <p>${convertFirstLetterUp(mainType)}</p>
+                <!-- Type -->
+                <div class="mt-2 mb-2">
+                    <h5 class="mb-2">Primärtyp</h5>
+                    <p>${convertFirstLetterUp(mainType)}</p>
+                </div>
+                <div class="mb-2">
+                    <h5 class="mb-2">Beschreibung</h5>
+                    <p>${pokemonDescr}</p>
+                </div>
+            </section>
         </div>
-        <div class="mb-2">
-            <h5 class="mb-2">Beschreibung</h5>
-            <p>${pokemonDescr}</p>
-        </div>
-    </section>
-`;
+    `;
 }
