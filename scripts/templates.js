@@ -3,7 +3,7 @@ function generateCard(id, name, pokemonImg, bgColor) {
         <!-- CARD -->
         <div onclick="renderCardInfo('${id}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
             <div class="bg-color-333 color-white">
-                <h2 class="card-title text-center m-2">#${id}  ${name}</h2>
+                <h2 class="card-title text-center m-2">#${id}  ${convertFirstLetterUp(name)}</h2>
             </div>
 
             <div class="image-container">
@@ -43,7 +43,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
         <!-- Pokemon Image -->
         <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
             <!-- Previous Pokemon -->
-            <img class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
+            <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
             <img id="currentImage" src="${pokemonImg}" alt="">
             <!-- Next Pokemon -->
             <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
@@ -65,11 +65,11 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
 
         <!-- Type -->
         <div class="mt-2 mb-2">
-            <h5 class="mb-2">Type</h5>
-            <p>${pokemonName} is a ${mainType} Pokemon.</p>
+            <h5 class="mb-2">Primärtyp</h5>
+            <p>${convertFirstLetterUp(mainType)}</p>
         </div>
         <div class="mb-2">
-            <h5 class="mb-2">Description</h5>
+            <h5 class="mb-2">Beschreibung</h5>
             <p>${pokemonDescr}</p>
         </div>
     </section>

@@ -48,10 +48,15 @@ async function getPokemonImg(i) {
 
 async function getPokemonName(pokemonRef) { 
     let name = await pokemonRef['name'];
-    let nameInUpperCase = name.toUpperCase();
+    return name;
+}
 
-    let firstLetter = nameInUpperCase.slice(0, 1);
-    let elseLetters = name.slice(1);
+
+function convertFirstLetterUp(string) {
+    let stringInUpperCase = string.toUpperCase();
+    
+    let firstLetter = stringInUpperCase.slice(0, 1);
+    let elseLetters = string.slice(1);
 
     return firstLetter + elseLetters;
 }
@@ -65,8 +70,8 @@ async function renderCardInfo(id) {
     let pokemonName = await getPokemonName(pokemonRef);
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
     let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
-    let allTypes = await getPokemonTypes(pokemonRef);          
-    let mainType = await getMainType(allTypes);                
+    let allTypes = await getPokemonTypes(pokemonRef); 
+    let mainType = await getMainType(allTypes);
     let pokemonImg = await getPokemonImg(id);                  
     let bgColor = await setBgColor(mainType);
 
@@ -83,8 +88,11 @@ async function renderCardInfo(id) {
 
 function nextPokemon(id) {
     id++;
-    console.log(id);
+    renderCardInfo(id);
+}
 
+function previousPokemon(id) {
+    id--;
     renderCardInfo(id);
 }
 
@@ -140,7 +148,6 @@ function toggleHeader(param) {
     } else {
         document.querySelector('header').classList.add('d-none');
     }
-    // document.querySelector('header').classList.toggle('d-none');
 }
 
 
@@ -150,8 +157,6 @@ function toggleScrollbar(param) {
     } else {
         document.querySelector('body').classList.add('overflow-hidden');
     }
-
-    // document.querySelector('body').classList.toggle('overflow-hidden');
 }
 
 
