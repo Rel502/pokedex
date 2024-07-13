@@ -46,7 +46,7 @@ async function getPokemonImg(i) {
 }
 
 
-async function getPokemonName(pokemonRef) { 
+async function getPokemonName(pokemonRef) {
     let name = await pokemonRef['name'];
     return name;
 }
@@ -54,7 +54,7 @@ async function getPokemonName(pokemonRef) {
 
 function convertFirstLetterUp(string) {
     let stringInUpperCase = string.toUpperCase();
-    
+
     let firstLetter = stringInUpperCase.slice(0, 1);
     let elseLetters = string.slice(1);
 
@@ -65,17 +65,8 @@ function convertFirstLetterUp(string) {
 async function renderCardInfo(id) {
     showPopup();
 
-    // Notwendige Variablen definieren
-    let pokemonRef = await getData(`pokemon/${id}`);
-    let pokemonName = await getPokemonName(pokemonRef);
-    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
-    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
-    let allTypes = await getPokemonTypes(pokemonRef); 
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(id);                  
-    let bgColor = await setBgColor(mainType);
+    let [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor] = await prepareCardInfoRendering(id);
 
-    // HTML generieren
     let cardContent = document.getElementById('popupOverlayBg');
     cardContent.innerHTML = '';
 
@@ -86,25 +77,38 @@ async function renderCardInfo(id) {
 }
 
 
+async function prepareCardInfoRendering(id) {
+    let pokemonRef = await getData(`pokemon/${id}`);
+    let pokemonName = await getPokemonName(pokemonRef);
+    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
+    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
+    let allTypes = await getPokemonTypes(pokemonRef);
+    let mainType = await getMainType(allTypes);
+    let pokemonImg = await getPokemonImg(id);
+    let bgColor = await setBgColor(mainType);
+
+    return [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
+}
+
+
 function nextPokemon(id) {
-    id++;
+    if (id < 10) {
+        id++;
+    } else {
+        id = 1;
+    }
     renderCardInfo(id);
 }
+
 
 function previousPokemon(id) {
     id--;
-    renderCardInfo(id);
+    if (!id < 1) {
+        renderCardInfo(id);
+    } else {
+        return;
+    }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 function insertOverlayImage(image, bgColor) {
