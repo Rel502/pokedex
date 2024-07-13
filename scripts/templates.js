@@ -1,13 +1,13 @@
-function generateCard(id, name, image, bgColor) {
+function generateCard(id, name, pokemonImg, bgColor) {
     return /*html*/`
         <!-- CARD -->
-        <div onclick="openCardInfo('${image}', '${bgColor}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
+        <div onclick="renderCardInfo('${pokemonImg}', '${bgColor}')" class="card pointer ${bgColor} ${bgColor}-hvr" style="width: 18rem;">
             <div class="bg-color-333 color-white">
                 <h2 class="card-title text-center m-2">#${id}  ${name}</h2>
             </div>
 
             <div class="image-container">
-                <img id="pokeImg" src=${image} class="card-img-top" alt="${name} image">
+                <img id="pokeImg" src=${pokemonImg} class="card-img-top" alt="${name} image">
             </div>
             
             <div class="pokemon-category p-1 pt-0">

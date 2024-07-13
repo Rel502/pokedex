@@ -20,3 +20,23 @@
 .bg-color-333 {
     background-color: #333;
 }
+
+.h-100-percent {
+    height: 100%;
+}
+
+.pl-16 {
+    padding-left: 16px;
+}
+
+.pr-16 {
+    padding-right: 16px;
+}
+
+.ml-16 {
+    margin-left: 16px;
+}
+
+.mr-16 {
+    margin-right: 16px;
+}
