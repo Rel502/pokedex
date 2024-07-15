@@ -46,7 +46,12 @@
     background-color: rgba(0,0,0,0.3);
 }
 
-.pokemon-category img {
+/* .pokemon-category img {
+    height: 32px;
+    width: 32px;
+} */
+
+.type-icon {
     height: 32px;
     width: 32px;
 }
@@ -83,7 +88,8 @@
 
 .overlay-img-container {
     position: relative;
-    height: 35vh;
+    padding: 16px;
+    /* height: 48vh; */
     background-color: white;
 }
 

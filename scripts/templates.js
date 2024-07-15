@@ -27,8 +27,8 @@ function generateCard(id, name, pokemonImg, bgColor) {
 
 function generateTypeIcon(type, srcRef) {
     return /*html*/`
-        <div class="type-container type-container-${type}">
-            <img class="h-100-percent" src=${srcRef}>
+        <div class="type-container type-container-std">
+            <img class="type-icon" src=${srcRef}>
         </div>
     `;
 }
@@ -42,16 +42,17 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                     <img class="icons" src="./assets/icons/close.png" alt="close">
                 </div>
                 
-                <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
+                <div class="d-flex justify-content-center align-items-center h-100-percent">
                     <!-- Previous Pokemon -->
                     <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
-                    <div class="d-flex flex-column justify-content-center align-items-center h-100-percent w-100-percent">
-                        
-                        <!-- Pokemon Image -->
+                    
+                    <!-- Pokemon Image, Types, ID -->
+                    <div class="d-flex flex-column justify-content-center align-items-center h-100-percent w-100-percent"> 
+                        <h2 class="card-title color-white m-2">#${id}  ${convertFirstLetterUp(pokemonName)}</h2>
                         <img id="currentImage" src="${pokemonImg}" alt="">
-                        <div id="typesContainerDescr${id}" class="h-10-vh d-flex justify-content-center gap-1 p-2"></div>
-                        
+                        <div id="typesContainerDescr${id}" class="d-flex justify-content-center gap-1 p-2"></div>
                     </div>
+                    
                     <!-- Next Pokemon -->
                     <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
                 </div>
