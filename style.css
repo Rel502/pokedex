@@ -20,6 +20,12 @@ header img {
     object-fit: cover;
 }
 
+@media (min-width: 481px) {
+    .navbar {
+        padding: 16px;
+    }
+}
+
 .mid-content-wrapper {
     display: flex;
     flex-wrap: wrap;
