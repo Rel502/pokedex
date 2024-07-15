@@ -26,6 +26,7 @@ header img {
     flex-direction: row;
     justify-content: center;
     gap: 16px;
+    margin: auto 64px;
 }
 
 .marhey-regular {

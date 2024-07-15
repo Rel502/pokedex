@@ -28,7 +28,7 @@ function generateCard(id, name, pokemonImg, bgColor) {
 function generateTypeIcon(type, srcRef) {
     return /*html*/`
         <div class="type-container type-container-${type}">
-            <img src=${srcRef}>
+            <img class="h-100-percent" src=${srcRef}>
         </div>
     `;
 }
@@ -41,11 +41,17 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                 <div onclick="closePopup()" class="icon-container pointer d-flex justify-content-center align-items-center">
                     <img class="icons" src="./assets/icons/close.png" alt="close">
                 </div>
-                <!-- Pokemon Image -->
+                
                 <div id="typesContainerCard" class="d-flex justify-content-center align-items-center h-100-percent">
                     <!-- Previous Pokemon -->
                     <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
-                    <img id="currentImage" src="${pokemonImg}" alt="">
+                    <div class="d-flex flex-column justify-content-center align-items-center h-100-percent w-100-percent">
+                        
+                        <!-- Pokemon Image -->
+                        <img id="currentImage" src="${pokemonImg}" alt="">
+                        <div id="typesContainerDescr${id}" class="h-10-vh d-flex justify-content-center gap-1 p-2"></div>
+                        
+                    </div>
                     <!-- Next Pokemon -->
                     <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
                 </div>

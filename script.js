@@ -72,8 +72,8 @@ async function renderCardInfo(id) {
 
     cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
 
-    // renderTypeImages('typesContainerCard', allTypes, id);
     insertOverlayImage(pokemonImg, bgColor);
+    renderTypeImages(`typesContainerDescr${id}`, allTypes, id);
 }
 
 
@@ -135,6 +135,15 @@ function closePopup() {
     toggleHeader('show');
     toggleScrollbar('show');
 }
+
+
+document.addEventListener("click", (event) => {
+    let window = document.getElementById('popupOverlayBg'); 
+
+    if (event.target == window) {
+        closePopup();
+    }
+});
 
 
 function togglePopup(param) {
@@ -208,3 +217,4 @@ function increasePokeCount() {
     }
     renderCards();
 }
+
