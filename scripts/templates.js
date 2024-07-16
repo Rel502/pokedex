@@ -86,7 +86,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
 }
 
 
-function generateCardStats(id) {
+function generateCardStats(id, HP_name, HP_value, attack_name, attack_value, defense_name, defense_value, specialAttack_name, specialAttack_value, specialDefense_value, specialDefense_name, speed_value, speed_name) {
     return /*html*/`
     <ul class="nav nav-pills">
         <li onclick="renderCardInfo('${id}')" class="nav-item">
@@ -100,8 +100,28 @@ function generateCardStats(id) {
         </li>
     </ul>
 
-    <div class="progress" role="progressbar">
-        <div class="progress-bar w-75"></div>
+    <div class="stats-container">
+        <h2>Statuswerte</h2>
+
+        
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${HP_value}%">${HP_name}</div>
+        </div>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${attack_value}%">${attack_name}</div>
+        </div>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${defense_value}%">${defense_name}</div>
+        </div>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${specialAttack_value}%">${specialAttack_name}</div>
+        </div>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${specialDefense_value}%">${specialDefense_name}</div>
+        </div>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: ${speed_value}%">${speed_name}</div>
+        </div>
     </div>
 `;
 }

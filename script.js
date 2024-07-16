@@ -93,7 +93,27 @@ async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
 
-    content.innerHTML += generateCardStats(id);
+    prepareStatsRendering(content, id);
+}
+
+
+async function prepareStatsRendering(content, id) {
+    let pokemonRef = await getData(`pokemon/${id}`);
+
+    let HP_name = await pokemonRef.stats[0].stat.name;
+    let HP_value = await pokemonRef.stats[0].base_stat;
+    let attack_name = await pokemonRef.stats[1].stat.name;
+    let attack_value = await pokemonRef.stats[1].base_stat;
+    let defense_name = await pokemonRef.stats[2].stat.name;
+    let defense_value = await pokemonRef.stats[2].base_stat;
+    let specialAttack_name = await pokemonRef.stats[3].stat.name;
+    let specialAttack_value = await pokemonRef.stats[3].base_stat;
+    let specialDefense_name = await pokemonRef.stats[4].stat.name;
+    let specialDefense_value = await pokemonRef.stats[4].base_stat;
+    let speed_name = await pokemonRef.stats[5].stat.name;
+    let speed_value = await pokemonRef.stats[5].base_stat;
+
+    content.innerHTML += generateCardStats(id, HP_name, HP_value, attack_name, attack_value, defense_name, defense_value, specialAttack_name, specialAttack_value, specialDefense_value, specialDefense_name, speed_value, speed_name);
 }
 
 

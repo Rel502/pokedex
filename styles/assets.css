@@ -134,6 +134,13 @@
     color: white;
 }
 
+.stats-container {
+    padding: 32px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 /* bg colors based on type */
 
 .bg-color-normal, .type-container-normal {
