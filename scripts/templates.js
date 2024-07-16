@@ -25,7 +25,7 @@ function generateCard(id, name, pokemonImg, bgColor) {
     `;
 }
 
-function generateTypeIcon(type, srcRef) {
+function generateTypeIcon(srcRef) {
     return /*html*/`
         <div class="type-container type-container-std">
             <img class="type-icon" src=${srcRef}>
@@ -58,15 +58,15 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                 </div>
             </section>
 
-            <section class="overlay-content-section">
+            <section id="overlayContent${id}" class="overlay-content-section">
                 <ul class="nav nav-pills">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">About</a>
                     </li>
-                    <li class="nav-item">
+                    <li onclick="renderCardStats('${id}')" class="nav-item">
                         <a class="nav-link" href="#">Stats</a>
                     </li>
-                    <li class="nav-item">
+                    <li onclick="renderCardEvolution('${id}')" class="nav-item">
                         <a class="nav-link" href="#">Evolution</a>
                     </li>
                 </ul>
@@ -83,4 +83,42 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
             </section>
         </div>
     `;
+}
+
+
+function generateCardStats(id) {
+    return /*html*/`
+    <ul class="nav nav-pills">
+        <li onclick="renderCardInfo('${id}')" class="nav-item">
+            <a class="nav-link" aria-current="page" href="#">About</a>
+        </li>
+        <li onclick="renderCardStats('${id}')" class="nav-item">
+            <a class="nav-link active" href="#">Stats</a>
+        </li>
+        <li onclick="renderCardEvolution('${id}')" class="nav-item">
+            <a class="nav-link" href="#">Evolution</a>
+        </li>
+    </ul>
+
+    <div class="progress" role="progressbar">
+        <div class="progress-bar w-75"></div>
+    </div>
+`;
+}
+
+
+function generateCardEvolution(id) {
+    return /*html*/`
+    <ul class="nav nav-pills">
+        <li onclick="renderCardInfo('${id}')" class="nav-item">
+            <a class="nav-link" aria-current="page" href="#">About</a>
+        </li>
+        <li onclick="renderCardStats('${id}')" class="nav-item">
+            <a class="nav-link" href="#">Stats</a>
+        </li>
+        <li onclick="renderCardEvolution('${id}')" class="nav-item">
+            <a class="nav-link active" href="#">Evolution</a>
+        </li>
+    </ul>
+`;
 }

@@ -8,6 +8,18 @@ const BASE_URL = "https://pokeapi.co/api/v2/";
 let pokemonCount = 20;
 let currentPokemonID;
 
+
+async function logPokemonStats(id) {
+    let pokemonRef = await getData(`pokemon/${id}`);
+    console.log(pokemonRef
+        .stats[0].stat.name     /*<--- NAME */
+    );
+    console.log(pokemonRef
+        .stats[0].base_stat     /*<--- VALUE */
+    );
+}
+
+
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
@@ -35,7 +47,7 @@ async function prepareRendering(i, content) {
     let bgColor = await setBgColor(mainType);
 
     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
-    renderTypeImages(`typesContainer${i}`, allTypes, i);
+    renderTypeImages(`typesContainer${i}`, allTypes);
 }
 
 
@@ -73,7 +85,23 @@ async function renderCardInfo(id) {
     cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
 
     insertOverlayImage(pokemonImg, bgColor);
-    renderTypeImages(`typesContainerDescr${id}`, allTypes, id);
+    renderTypeImages(`typesContainerDescr${id}`, allTypes);
+}
+
+
+async function renderCardStats(id) {
+    let content = document.getElementById(`overlayContent${id}`);
+    content.innerHTML = '';
+
+    content.innerHTML += generateCardStats(id);
+}
+
+
+async function renderCardEvolution(id) {
+    let content = document.getElementById(`overlayContent${id}`);
+    content.innerHTML = '';
+
+    content.innerHTML += generateCardEvolution(id);
 }
 
 
@@ -92,7 +120,7 @@ async function prepareCardInfoRendering(id) {
 
 
 function nextPokemon(id) {
-    if (id < 10) {
+    if (id < 151) {
         id++;
     } else {
         id = 1;
@@ -138,7 +166,7 @@ function closePopup() {
 
 
 document.addEventListener("click", (event) => {
-    let window = document.getElementById('popupOverlayBg'); 
+    let window = document.getElementById('popupOverlayBg');
 
     if (event.target == window) {
         closePopup();
@@ -173,12 +201,12 @@ function toggleScrollbar(param) {
 }
 
 
-function renderTypeImages(container, allTypes, i) {
+function renderTypeImages(container, allTypes) {
     let typesContainer = document.getElementById(container);
 
     for (let j = 0; j < allTypes.length; j++) {
         let srcRef = "./assets/img/types/" + allTypes[j] + ".png";
-        typesContainer.innerHTML += generateTypeIcon(allTypes[j], srcRef);
+        typesContainer.innerHTML += generateTypeIcon(srcRef);
     }
 }
 
@@ -217,4 +245,3 @@ function increasePokeCount() {
     }
     renderCards();
 }
-
