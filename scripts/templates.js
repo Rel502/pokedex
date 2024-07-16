@@ -72,14 +72,16 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                 </ul>
 
                 <!-- Type -->
-                <div class="mt-2 mb-2">
-                    <h5 class="mb-2">Primärtyp</h5>
-                    <p>${convertFirstLetterUp(mainType)}</p>
-                </div>
-                <div class="mb-2">
-                    <h5 class="mb-2">Beschreibung</h5>
-                    <p>${pokemonDescr}</p>
-                </div>
+                 <div class="card-details-container">
+                    <div class="mb-3">
+                        <h2 class="mb-2">Primärtyp</h2>
+                        <p>${convertFirstLetterUp(mainType)}</p>
+                    </div>
+                    <div class="mb-2">
+                        <h2 class="mb-2">Beschreibung</h2>
+                        <p>${pokemonDescr}</p>
+                    </div>
+                 </div>
             </section>
         </div>
     `;
@@ -100,27 +102,27 @@ function generateCardStats(id, HP_name, HP_value, attack_name, attack_value, def
         </li>
     </ul>
 
-    <div class="stats-container">
+    <div class="card-details-container">
         <h2>Statuswerte</h2>
-
-        
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${HP_value}%">${HP_name}</div>
-        </div>
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${attack_value}%">${attack_name}</div>
-        </div>
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${defense_value}%">${defense_name}</div>
-        </div>
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${specialAttack_value}%">${specialAttack_name}</div>
-        </div>
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${specialDefense_value}%">${specialDefense_name}</div>
-        </div>
-        <div class="progress" role="progressbar">
-            <div class="progress-bar" style="width: ${speed_value}%">${speed_name}</div>
+        <div class="stats-container">
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${HP_value}%"><b>${HP_name}</b></div>
+            </div>
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${attack_value}%"><b>${attack_name}</b></div>
+            </div>
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${defense_value}%"><b>${defense_name}</b></div>
+            </div>
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${specialAttack_value}%"><b>${specialAttack_name}</b></div>
+            </div>
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${specialDefense_value}%"><b>${specialDefense_name}</b></div>
+            </div>
+            <div class="progress" role="progressbar">
+                <div class="progress-bar" style="width: ${speed_value}%"><b>${speed_name}</b></div>
+            </div>
         </div>
     </div>
 `;
