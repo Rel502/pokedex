@@ -19,6 +19,16 @@ let currentPokemonID;
 // }
 
 
+async function logEvo(id) {
+    let evoRef = await getData(`evolution-chain/${id}`);
+    console.log(evoRef
+        .chain.evolves_to[0].species.name   
+    );
+}
+
+logEvo(1)
+
+
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
