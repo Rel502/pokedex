@@ -126,5 +126,12 @@ function generateCardEvolution(id) {
             <a class="nav-link active" href="#">Evolution</a>
         </li>
     </ul>
+
+    <div class="card-details-container">
+        <h2>Evolution</h2>
+        <div id="evolutionContainer" class="evolution-container">
+            <!-- rendering evolution-chain... -->
+        </div>
+    </div>
 `;
 }

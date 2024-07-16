@@ -8,15 +8,15 @@ let pokemonCount = 20;
 let currentPokemonID;
 
 
-async function logPokemonStats(id) {
-    let pokemonRef = await getData(`pokemon/${id}`);
-    console.log(pokemonRef
-        .stats[0].stat.name     /*<--- NAME */
-    );
-    console.log(pokemonRef
-        .stats[0].base_stat     /*<--- VALUE */
-    );
-}
+// async function logPokemonStats(id) {
+//     let pokemonRef = await getData(`pokemon/${id}`);
+//     console.log(pokemonRef
+//         .stats[0].stat.name     
+//     );
+//     console.log(pokemonRef
+//         .stats[0].base_stat     
+//     );
+// }
 
 
 async function getData(path = "") {
@@ -25,6 +25,9 @@ async function getData(path = "") {
     return responseToJson;
 }
 
+
+/*<-----------------------------------------------------> */
+// RENDERING CARDS
 
 async function renderCards() {
     let content = document.getElementById('content');
@@ -39,7 +42,6 @@ async function renderCards() {
 async function prepareRendering(i, content) {
     let pokemonRef = await getData(`pokemon/${i}`);
     let name = await getPokemonName(pokemonRef);
-    // let name = pokemonRef['name'];
     let allTypes = await getPokemonTypes(pokemonRef);
     let mainType = await getMainType(allTypes);
     let pokemonImg = await getPokemonImg(i);
@@ -50,29 +52,8 @@ async function prepareRendering(i, content) {
 }
 
 
-async function getPokemonImg(i) {
-    let pokemonRef = await getData(`pokemon/${i}`);
-    let pokemonImg = pokemonRef['sprites']['front_default'];
-    return pokemonImg;
-}
-
-
-async function getPokemonName(pokemonRef) {
-    let name = await pokemonRef['name'];
-    return name;
-}
-
-
-function convertFirstLetterUp(string) {
-    let stringInUpperCase = string.toUpperCase();
-
-    let firstLetter = stringInUpperCase.slice(0, 1);
-    let elseLetters = string.slice(1);
-
-    return firstLetter + elseLetters;
-}
-
-
+/*<-----------------------------------------------------> */
+// RENDERING CARD INFO <--- opening single pokemon card
 async function renderCardInfo(id) {
     showPopup();
 
@@ -88,6 +69,22 @@ async function renderCardInfo(id) {
 }
 
 
+async function prepareCardInfoRendering(id) {
+    let pokemonRef = await getData(`pokemon/${id}`);
+    let pokemonName = await getPokemonName(pokemonRef);
+    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
+    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
+    let allTypes = await getPokemonTypes(pokemonRef);
+    let mainType = await getMainType(allTypes);
+    let pokemonImg = await getPokemonImg(id);
+    let bgColor = await setBgColor(mainType);
+
+    return [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
+}
+
+
+/*<-----------------------------------------------------> */
+// RENDERING -> STATS
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
@@ -119,6 +116,8 @@ async function prepareStatsRendering(content, id) {
 }
 
 
+/*<-----------------------------------------------------> */
+// RENDERING -> EVOLUTION
 async function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
@@ -127,20 +126,8 @@ async function renderCardEvolution(id) {
 }
 
 
-async function prepareCardInfoRendering(id) {
-    let pokemonRef = await getData(`pokemon/${id}`);
-    let pokemonName = await getPokemonName(pokemonRef);
-    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
-    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
-    let allTypes = await getPokemonTypes(pokemonRef);
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(id);
-    let bgColor = await setBgColor(mainType);
-
-    return [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
-}
-
-
+/*<-----------------------------------------------------> */
+// NEXT / PREVIOUS POKEMON
 function nextPokemon(id) {
     if (id < 151) {
         id++;
@@ -187,6 +174,7 @@ function closePopup() {
 }
 
 
+// Close overlay if click on background
 document.addEventListener("click", (event) => {
     let window = document.getElementById('popupOverlayBg');
 
@@ -266,4 +254,27 @@ function increasePokeCount() {
         return;
     }
     renderCards();
+}
+
+
+async function getPokemonImg(i) {
+    let pokemonRef = await getData(`pokemon/${i}`);
+    let pokemonImg = pokemonRef['sprites']['front_default'];
+    return pokemonImg;
+}
+
+
+async function getPokemonName(pokemonRef) {
+    let name = await pokemonRef['name'];
+    return name;
+}
+
+
+function convertFirstLetterUp(string) {
+    let stringInUpperCase = string.toUpperCase();
+
+    let firstLetter = stringInUpperCase.slice(0, 1);
+    let elseLetters = string.slice(1);
+
+    return firstLetter + elseLetters;
 }
