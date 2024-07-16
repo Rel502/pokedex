@@ -33,6 +33,7 @@ function generateTypeIcon(srcRef) {
     `;
 }
 
+
 function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr) {
     return /*html*/`
         <div class="overlay-outer-div">
@@ -88,7 +89,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
 }
 
 
-function generateCardStats(id, HP_name, HP_value, attack_name, attack_value, defense_name, defense_value, specialAttack_name, specialAttack_value, specialDefense_value, specialDefense_name, speed_value, speed_name) {
+function generateCardStats(id) {
     return /*html*/`
     <ul class="nav nav-pills">
         <li onclick="renderCardInfo('${id}')" class="nav-item">
@@ -104,25 +105,8 @@ function generateCardStats(id, HP_name, HP_value, attack_name, attack_value, def
 
     <div class="card-details-container">
         <h2>Statuswerte</h2>
-        <div class="stats-container">
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${HP_value}%"><b>${HP_name}</b></div>
-            </div>
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${attack_value}%"><b>${attack_name}</b></div>
-            </div>
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${defense_value}%"><b>${defense_name}</b></div>
-            </div>
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${specialAttack_value}%"><b>${specialAttack_name}</b></div>
-            </div>
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${specialDefense_value}%"><b>${specialDefense_name}</b></div>
-            </div>
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${speed_value}%"><b>${speed_name}</b></div>
-            </div>
+        <div id="statsContainer" class="stats-container">
+            <!-- rendering stats... -->
         </div>
     </div>
 `;
