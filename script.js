@@ -19,16 +19,6 @@ let currentPokemonID;
 // }
 
 
-async function logEvo(id) {
-    let evoRef = await getData(`evolution-chain/${id}`);
-    console.log(evoRef
-        .chain.evolves_to[0].species.name   
-    );
-}
-
-logEvo(1)
-
-
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
@@ -115,7 +105,6 @@ async function prepareStatsRendering(content, id) {
         let statValue = statsRef[statsIndex].base_stat;
 
         let statsContainer = document.getElementById('statsContainer');
-        // statsContainer.innerHTML = '';
 
         statsContainer.innerHTML += /*html*/`
             <div class="progress" role="progressbar">
@@ -127,13 +116,54 @@ async function prepareStatsRendering(content, id) {
 
 
 /*<-----------------------------------------------------> */
+/*<-----------------------------------------------------> */
+/*<-----------------------------------------------------> */
+/*<-----------------------------------------------------> */
+/*<-----------------------------------------------------> */
 // RENDERING -> EVOLUTION
 async function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
 
     content.innerHTML += generateCardEvolution(id);
+
+    await prepareEvolutionRendering(id);
 }
+
+
+async function prepareEvolutionRendering(id) {
+    let content = document.getElementById('evolutionContainer');
+    content.innerHTML = '';
+
+    let evolutionRef = await getData(`evolution-chain/${id}`);
+    let evolvesToRef = await evolutionRef.chain;
+    let firstEvolution = await evolvesToRef.evolves_to[0].species.name;
+    let secondEvolution = await evolvesToRef.evolves_to[0].evolves_to[0].species.name;
+
+    content.innerHTML += /*html*/`
+        <div>
+            <img src="./assets/icons/1_icon.png" alt="First">
+            ${convertFirstLetterUp(firstEvolution)}
+        </div>
+        <div>
+            <img src="./assets/icons/2_icon.png" alt="First">
+            ${convertFirstLetterUp(secondEvolution)}
+        </div>
+    `;
+}
+
+
+async function logEvo(id) {
+    let evoRef = await getData(`evolution-chain/${id}`);
+    console.log(evoRef
+        .chain.evolves_to[0].species.name
+    );
+    console.log(evoRef
+        .chain.evolves_to[0].evolves_to[0].species.name
+    );
+}
+
+logEvo(1)
 
 
 /*<-----------------------------------------------------> */

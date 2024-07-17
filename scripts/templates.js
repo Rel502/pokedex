@@ -128,7 +128,7 @@ function generateCardEvolution(id) {
     </ul>
 
     <div class="card-details-container">
-        <h2>Evolution</h2>
+        <h2>Entwicklungen</h2>
         <div id="evolutionContainer" class="evolution-container">
             <!-- rendering evolution-chain... -->
         </div>

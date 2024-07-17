@@ -145,6 +145,10 @@
     gap: 24px;
 }
 
+.evolution-container {
+    padding: 16px 0px;
+}
+
 /* bg colors based on type */
 
 .bg-color-normal, .type-container-normal {
