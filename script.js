@@ -135,32 +135,50 @@ async function prepareEvolutionRendering(id) {
     let content = document.getElementById('evolutionContainer');
     content.innerHTML = '';
 
-    let evolutionRef = await getData(`evolution-chain/${id}`);
-    let evolvesToRef = await evolutionRef.chain;
-    let firstEvolution = await evolvesToRef.evolves_to[0].species.name;
-    let secondEvolution = await evolvesToRef.evolves_to[0].evolves_to[0].species.name;
+    let pokemonSpecies = await getData(`pokemon-species/${id}`);
+    // let evolvesFrom = pokemonSpecies.evolves_from_species.name;
+    // --> ? Fehlermeldung, wenn ".evolves_from_species" nicht vorhanden
+
+    let evolutionChainUrl = await pokemonSpecies.evolution_chain.url;
+    let evolutionChainRef = await fetch(evolutionChainUrl);
+    let evolutionChainRefToJson = await evolutionChainRef.json();
+
+    let chainRef = await evolutionChainRefToJson.chain;
+    let nextEvolution = await chainRef.evolves_to[0].species.name;
+
+    console.log(chainRef);
+    console.log(nextEvolution);
 
     content.innerHTML += /*html*/`
         <div>
             <img src="./assets/icons/1_icon.png" alt="First">
-            ${convertFirstLetterUp(firstEvolution)}
-        </div>
-        <div>
-            <img src="./assets/icons/2_icon.png" alt="First">
-            ${convertFirstLetterUp(secondEvolution)}
+            ${convertFirstLetterUp(nextEvolution)}
         </div>
     `;
 }
 
 
 async function logEvo(id) {
-    let evoRef = await getData(`evolution-chain/${id}`);
-    console.log(evoRef
-        .chain.evolves_to[0].species.name
-    );
-    console.log(evoRef
-        .chain.evolves_to[0].evolves_to[0].species.name
-    );
+    try {
+        let pokemonSpecies = await getData(`pokemon-species/${id}`);
+        // console.log("Pokemon Species Data:", pokemonSpecies);
+
+        let evolutionChainUrl = pokemonSpecies.evolution_chain.url;
+        // console.log("Evolution-Chain URL:", evolutionChainUrl);
+
+        let evolutionChainRef = await fetch(evolutionChainUrl);
+        // console.log("Evolution-Chain Reference:", await evolutionChainRef.json());
+
+    } catch (error) {
+        console.error("Fehler beim Abrufen der Daten:", error);
+    }
+
+
+
+
+
+
+
 }
 
 logEvo(1)
