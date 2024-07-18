@@ -135,53 +135,48 @@ async function prepareEvolutionRendering(id) {
     let content = document.getElementById('evolutionContainer');
     content.innerHTML = '';
 
-    let pokemonSpecies = await getData(`pokemon-species/${id}`);
-    // let evolvesFrom = pokemonSpecies.evolves_from_species.name;
-    // --> ? Fehlermeldung, wenn ".evolves_from_species" nicht vorhanden
+    let chainRef = await getEvolutionChainRef(id);
+    console.log("Evolution Chain: ", chainRef);
 
-    let evolutionChainUrl = await pokemonSpecies.evolution_chain.url;
-    let evolutionChainRef = await fetch(evolutionChainUrl);
-    let evolutionChainRefToJson = await evolutionChainRef.json();
+    let evolutionsArr = [];
 
-    let chainRef = await evolutionChainRefToJson.chain;
-    let nextEvolution = await chainRef.evolves_to[0].species.name;
+    /*
+    
+    ... 
+    --> while-loop -> alle Entwicklungen in evolutionsArr pushen
+    
+    */
 
-    console.log(chainRef);
-    console.log(nextEvolution);
+    let $1stStage = await chainRef.species.name;
+    let $2ndStage = await chainRef.evolves_to[0].species.name;
+    let $3rdStage = await chainRef.evolves_to[0].evolves_to[0].species.name;
+
+    console.log($1stStage);
+    console.log($2ndStage);
+    console.log($3rdStage);
 
     content.innerHTML += /*html*/`
         <div>
             <img src="./assets/icons/1_icon.png" alt="First">
-            ${convertFirstLetterUp(nextEvolution)}
+            ${convertFirstLetterUp($1stStage)}
         </div>
     `;
 }
 
 
-async function logEvo(id) {
-    try {
-        let pokemonSpecies = await getData(`pokemon-species/${id}`);
-        // console.log("Pokemon Species Data:", pokemonSpecies);
-
-        let evolutionChainUrl = pokemonSpecies.evolution_chain.url;
-        // console.log("Evolution-Chain URL:", evolutionChainUrl);
-
-        let evolutionChainRef = await fetch(evolutionChainUrl);
-        // console.log("Evolution-Chain Reference:", await evolutionChainRef.json());
-
-    } catch (error) {
-        console.error("Fehler beim Abrufen der Daten:", error);
-    }
-
-
-
-
-
-
-
+async function getEvolutionChainRef(id) {
+    let pokemonSpecies = await getData(`pokemon-species/${id}`);
+    let evolutionChainUrl = await pokemonSpecies.evolution_chain.url;
+    let evolutionData = await getEvolutionData(evolutionChainUrl);
+    return await evolutionData.chain;
 }
 
-logEvo(1)
+
+async function getEvolutionData(evolutionChainUrl) {
+    let response = await fetch(evolutionChainUrl);
+    let responseToJson = await response.json();
+    return responseToJson;
+}
 
 
 /*<-----------------------------------------------------> */
