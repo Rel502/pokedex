@@ -139,6 +139,15 @@ async function prepareEvolutionRendering(id) {
     console.log("Evolution Chain: ", chainRef);
 
     let evolutionsArr = [];
+    let evolves_to = chainRef.evolves_to;
+
+    while (evolves_to > 0) {
+        let currentStage = chainRef.species.name;
+        evolutionsArr.push({
+            name : currentStage,
+            url : chainRef.species.url,
+        });
+    }
 
     /*
     
