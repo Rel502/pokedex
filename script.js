@@ -3,8 +3,6 @@ function init() {
 }
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
-
-let pokemonCount = 20;
 let currentPokemonID;
 
 
@@ -29,17 +27,22 @@ async function getData(path = "") {
 /*<-----------------------------------------------------> */
 // RENDERING CARDS
 
+let currentPokemonCount = 1;
+let pokemonCount = 20;
+
 async function renderCards() {
     let content = document.getElementById('content');
-    content.innerHTML = '';
+    // content.innerHTML = '';
 
     showSpinner();
 
-    for (let i = 1; i < pokemonCount; i++) {
+    for (let i = currentPokemonCount; i < pokemonCount; i++) {
         await prepareRendering(i, content);
     }
 
     hideSpinner();
+
+    currentPokemonCount = pokemonCount;
 }
 
 

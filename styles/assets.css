@@ -37,10 +37,10 @@
     transition: all 225ms;
 }
 
-.image-container:hover {
+/* .image-container:hover {
     transform: scale(1.2);
     filter: drop-shadow(2px 4px 6px black);
-}
+} */
 
 .pokemon-category {
     background-color: rgba(0,0,0,0.3);
@@ -129,7 +129,7 @@
 }
 
 .loading-spinner-bg {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
