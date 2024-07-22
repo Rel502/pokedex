@@ -33,9 +33,27 @@ async function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
+    showSpinner();
+
     for (let i = 1; i < pokemonCount; i++) {
         await prepareRendering(i, content);
     }
+
+    hideSpinner();
+}
+
+
+function showSpinner() {
+    let container = document.getElementById('loadingSpinner');
+    container.classList.remove('d-none');
+    toggleScrollbar('hide');
+}
+
+
+function hideSpinner() {
+    let container = document.getElementById('loadingSpinner');
+    container.classList.add('d-none');
+    toggleScrollbar('show');
 }
 
 
