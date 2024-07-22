@@ -132,44 +132,16 @@ async function renderCardEvolution(id) {
 
 
 async function prepareEvolutionRendering(id) {
+    let evolutionChainRef = await getEvolutionChainRef(id);
+    let evolutionStages = await getEvolutionStages(evolutionChainRef);
+
     let content = document.getElementById('evolutionContainer');
     content.innerHTML = '';
 
-    let chainRef = await getEvolutionChainRef(id);
-    console.log("Evolution Chain: ", chainRef);
-
-    let evolutionsArr = [];
-    let evolves_to = chainRef.evolves_to;
-
-    while (evolves_to > 0) {
-        let currentStage = chainRef.species.name;
-        evolutionsArr.push({
-            name : currentStage,
-            url : chainRef.species.url,
-        });
+    for (let i = 0; i < evolutionStages.length; i++) {
+        let currentStage = evolutionStages[i];
+        content.innerHTML += generateEvolutionStages(currentStage);
     }
-
-    /*
-    
-    ... 
-    --> while-loop -> alle Entwicklungen in evolutionsArr pushen
-    
-    */
-
-    let $1stStage = await chainRef.species.name;
-    let $2ndStage = await chainRef.evolves_to[0].species.name;
-    let $3rdStage = await chainRef.evolves_to[0].evolves_to[0].species.name;
-
-    console.log($1stStage);
-    console.log($2ndStage);
-    console.log($3rdStage);
-
-    content.innerHTML += /*html*/`
-        <div>
-            <img src="./assets/icons/1_icon.png" alt="First">
-            ${convertFirstLetterUp($1stStage)}
-        </div>
-    `;
 }
 
 
@@ -186,6 +158,45 @@ async function getEvolutionData(evolutionChainUrl) {
     let responseToJson = await response.json();
     return responseToJson;
 }
+
+
+async function getEvolutionStages(evolutionChainRef) {
+    let evolves_to = evolutionChainRef.evolves_to;
+    let evolutionStages = [];
+    evolutionStages.push(insertFirstStageOfEvolution(evolutionChainRef));
+    let stageIndex = 1;
+
+    while (evolvesToNotEmpty(evolves_to)) {
+        const currentStage = evolves_to[0];
+        evolutionStages.push(insertRestOfEvolutionStages(currentStage, stageIndex));
+        evolves_to = currentStage.evolves_to;
+        stageIndex++;
+    }
+    return evolutionStages;
+}
+
+
+function insertRestOfEvolutionStages(currentStage, stageIndex) {
+    return ({
+        index: stageIndex,
+        name: currentStage.species.name,
+        url: currentStage.species.url,
+    });
+}
+
+
+function evolvesToNotEmpty(evolves_to) {
+    return evolves_to.length !== 0;
+}
+
+
+function insertFirstStageOfEvolution(evolutionChainRef) {
+    return ({
+        index: 0,
+        name: evolutionChainRef.species.name,
+        url: evolutionChainRef.species.url,
+    })
+};
 
 
 /*<-----------------------------------------------------> */

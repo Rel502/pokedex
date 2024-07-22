@@ -135,3 +135,13 @@ function generateCardEvolution(id) {
     </div>
 `;
 }
+
+
+function generateEvolutionStages(currentStage) {
+    return /*html*/`
+    <div>
+        <img class="stage-icon" src="./assets/icons/stage_${currentStage.index}.png" alt="First">
+        ${convertFirstLetterUp(currentStage.name)}
+    </div>
+`;
+}

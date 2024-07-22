@@ -56,6 +56,11 @@
     width: 32px;
 }
 
+.stage-icon {
+    height: 48px;
+    width: 48px;
+}
+
 /* popup overlay, which opens when a pokemon card is clicked */
 
 .popup-overlay-bg {
