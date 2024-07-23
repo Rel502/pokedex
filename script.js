@@ -30,6 +30,8 @@ async function getData(path = "") {
 let currentPokemonCount = 1;
 let pokemonCount = 20;
 
+let namesArr = [];
+
 async function renderCards() {
     let content = document.getElementById('content');
     // content.innerHTML = '';
@@ -46,6 +48,33 @@ async function renderCards() {
 }
 
 
+async function prepareRendering(i, content) {
+    let pokemonRef = await getData(`pokemon/${i}`);
+    let name = await getPokemonName(pokemonRef);
+    let allTypes = await getPokemonTypes(pokemonRef);
+    let mainType = await getMainType(allTypes);
+    let pokemonImg = await getPokemonImg(i);
+    let bgColor = await setBgColor(mainType);
+
+    // pushToLocalArr(name, mainType, pokemonImg, bgColor);
+
+    content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
+    renderTypeImages(`typesContainer${i}`, allTypes);
+}
+
+
+// function pushToLocalArr(name, mainType, pokemonImg, bgColor) {
+//     namesArr = [
+//         {
+//             "name": name,
+//             "mainType": mainType,
+//             "img": pokemonImg,
+//             "bgColor": bgColor
+//         }
+//     ]
+// }
+
+
 function showSpinner() {
     let container = document.getElementById('loadingSpinner');
     container.classList.remove('d-none');
@@ -57,19 +86,6 @@ function hideSpinner() {
     let container = document.getElementById('loadingSpinner');
     container.classList.add('d-none');
     toggleScrollbar('show');
-}
-
-
-async function prepareRendering(i, content) {
-    let pokemonRef = await getData(`pokemon/${i}`);
-    let name = await getPokemonName(pokemonRef);
-    let allTypes = await getPokemonTypes(pokemonRef);
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(i);
-    let bgColor = await setBgColor(mainType);
-
-    content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
-    renderTypeImages(`typesContainer${i}`, allTypes);
 }
 
 
