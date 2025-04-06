@@ -28,9 +28,12 @@ async function getData(path = "") {
 // RENDERING CARDS
 
 let currentPokemonCount = 1;
-let pokemonCount = 20;
+let pokemonCount = 21;
 
 let namesArr = [];
+
+
+
 
 async function renderCards() {
     let content = document.getElementById('content');
@@ -89,7 +92,7 @@ function filterPokemon() {
 
     // Filterung
     cards.forEach((card) => {
-        const name = card.querySelector(".card-title").textContent.toLowerCase();
+        let name = card.querySelector(".card-title").textContent.toLowerCase();
         if (name.includes(searchValue)) {
             card.style.display = "block";
         } else {
@@ -97,6 +100,7 @@ function filterPokemon() {
         }
     });
 }
+
 
 function showSpinner() {
     let container = document.getElementById('loadingSpinner');
