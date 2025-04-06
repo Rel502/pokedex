@@ -74,6 +74,29 @@ async function prepareRendering(i, content) {
 //     ]
 // }
 
+function filterPokemon() {
+    let searchValue = document.getElementById('search').value.toLowerCase();
+    let cards = document.querySelectorAll('.card');
+
+    // Nur suchen, wenn mindestens 3 Zeichen eingegeben wurden
+    if (searchValue.length < 3) {
+        // zeige alle Karten wieder an
+        cards.forEach((card) => {
+            card.style.display = "block";
+        });
+        return;
+    }
+
+    // Filterung
+    cards.forEach((card) => {
+        const name = card.querySelector(".card-title").textContent.toLowerCase();
+        if (name.includes(searchValue)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
 
 function showSpinner() {
     let container = document.getElementById('loadingSpinner');
