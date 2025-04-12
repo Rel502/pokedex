@@ -92,27 +92,25 @@ async function prepareRendering(i, content) {
 
 function filterPokemon() {
     let searchValue = document.getElementById('search').value.toLowerCase();
-    let cards = document.querySelectorAll('.card');
 
     // Nur suchen, wenn mindestens 3 Zeichen eingegeben wurden
     if (searchValue.length < 3) {
-        // zeige alle Karten wieder an
-        cards.forEach((card) => {
-            card.style.display = "block";
-        });
+        let first20 = namesArr.slice(0, 20);
+        renderPokemon(first20);
         return;
     }
-
-    // Filterung
-    cards.forEach((card) => {
-        let name = card.querySelector(".card-title").textContent.toLowerCase();
-        if (name.includes(searchValue)) {
-            card.style.display = "block";
-        } else {
-            card.style.display = "none";
-        }
-    });
 }
+
+
+// function renderPokemon(pokemonList) {
+//     let content = document.getElementById('content');
+//     content.innerHTML = '';
+
+//     console.log(pokemonList[0]);
+
+//     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
+//     renderTypeImages(`typesContainer${i}`, allTypes);
+// }
 
 
 function showSpinner() {
