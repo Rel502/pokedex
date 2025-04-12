@@ -1,5 +1,6 @@
 function init() {
     renderCards();
+    loadAllPokemon();
 }
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
@@ -33,6 +34,31 @@ let pokemonCount = 21;
 let namesArr = [];
 
 
+// Alle Pokemon von API laden und Funktion (pushToLocalArr) aufrufen, um die Pokemon-Daten in ein lokales Array zu pushen
+async function loadAllPokemon() {
+    for (let i = 1; i < 152; i++) {
+        let pokemonRef = await getData(`pokemon/${i}`);
+        let name = await getPokemonName(pokemonRef);
+        let allTypes = await getPokemonTypes(pokemonRef);
+        let mainType = await getMainType(allTypes);
+        let pokemonImg = await getPokemonImg(i);
+        let bgColor = await setBgColor(mainType);
+
+        pushToLocalArr(name, mainType, pokemonImg, bgColor);
+    }
+}
+
+
+// Pushen der Pokemon-Daten aller Pokemon in ein lokales Array
+function pushToLocalArr(name, mainType, pokemonImg, bgColor) {
+    namesArr.push({
+            "name": name,
+            "mainType": mainType,
+            "img": pokemonImg,
+            "bgColor": bgColor
+        }
+    )
+}
 
 
 async function renderCards() {
@@ -59,23 +85,10 @@ async function prepareRendering(i, content) {
     let pokemonImg = await getPokemonImg(i);
     let bgColor = await setBgColor(mainType);
 
-    // pushToLocalArr(name, mainType, pokemonImg, bgColor);
-
     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
     renderTypeImages(`typesContainer${i}`, allTypes);
 }
 
-
-// function pushToLocalArr(name, mainType, pokemonImg, bgColor) {
-//     namesArr = [
-//         {
-//             "name": name,
-//             "mainType": mainType,
-//             "img": pokemonImg,
-//             "bgColor": bgColor
-//         }
-//     ]
-// }
 
 function filterPokemon() {
     let searchValue = document.getElementById('search').value.toLowerCase();
