@@ -44,12 +44,12 @@ async function loadAllPokemon() {
 // Pushen der Pokemon-Daten aller Pokemon in ein lokales Array
 function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
     namesArr.push({
-            "name": name,
-            "allTypes": allTypes,
-            "mainType": mainType,
-            "img": pokemonImg,
-            "bgColor": bgColor
-        }
+        "name": name,
+        "allTypes": allTypes,
+        "mainType": mainType,
+        "img": pokemonImg,
+        "bgColor": bgColor
+    }
     )
 }
 
@@ -66,7 +66,7 @@ async function renderCards() {
 
 
 async function prepareRendering(i, content) {
-    const pokemon = namesArr[i-1];
+    const pokemon = namesArr[i - 1];
 
     let name = pokemon.name;
     let pokemonImg = pokemon.img;
@@ -79,13 +79,16 @@ async function prepareRendering(i, content) {
 
 
 function filterPokemon() {
-    let searchValue = document.getElementById('search').value.toLowerCase();
+    let searchValue = document.getElementById('search').value.trim();
+    searchValue = searchValue.toLowerCase();
 
-    // Nur suchen, wenn mindestens 3 Zeichen eingegeben wurden
-    if (searchValue.length < 3) {
-        let first20 = namesArr.slice(0, 20);
-        renderPokemon(first20);
-        return;
+    if (searchValue.length >= 3) {
+        for (let i = 0; i < namesArr.length; i++) {
+            const name = namesArr[i].name;
+            if (name.toLowerCase().includes(searchValue)) {
+                // console.log(name);
+            }
+        }
     }
 }
 
