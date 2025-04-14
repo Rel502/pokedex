@@ -1,21 +1,9 @@
 function init() {
-    renderCards();
     loadAllPokemon();
 }
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 let currentPokemonID;
-
-
-// async function logPokemonStats(id) {
-//     let pokemonRef = await getData(`pokemon/${id}`);
-//     console.log(pokemonRef
-//         .stats[0].stat.name     
-//     );
-//     console.log(pokemonRef
-//         .stats[0].base_stat     
-//     );
-// }
 
 
 async function getData(path = "") {
@@ -36,6 +24,7 @@ let namesArr = [];
 
 // Alle Pokemon von API laden und Funktion (pushToLocalArr) aufrufen, um die Pokemon-Daten in ein lokales Array zu pushen
 async function loadAllPokemon() {
+    showSpinner();
     for (let i = 1; i < 152; i++) {
         let pokemonRef = await getData(`pokemon/${i}`);
         let name = await getPokemonName(pokemonRef);
@@ -44,15 +33,19 @@ async function loadAllPokemon() {
         let pokemonImg = await getPokemonImg(i);
         let bgColor = await setBgColor(mainType);
 
-        pushToLocalArr(name, mainType, pokemonImg, bgColor);
+        pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor);
     }
+    hideSpinner();
+    // Pokemon Cards erst rendern, sobald alle Pokemon geladen und ins lokale Array gepusht wurden
+    renderCards();
 }
 
 
 // Pushen der Pokemon-Daten aller Pokemon in ein lokales Array
-function pushToLocalArr(name, mainType, pokemonImg, bgColor) {
+function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
     namesArr.push({
             "name": name,
+            "allTypes": allTypes,
             "mainType": mainType,
             "img": pokemonImg,
             "bgColor": bgColor
@@ -63,27 +56,22 @@ function pushToLocalArr(name, mainType, pokemonImg, bgColor) {
 
 async function renderCards() {
     let content = document.getElementById('content');
-    // content.innerHTML = '';
-
-    showSpinner();
 
     for (let i = currentPokemonCount; i < pokemonCount; i++) {
-        await prepareRendering(i, content);
+        prepareRendering(i, content);
     }
-
-    hideSpinner();
 
     currentPokemonCount = pokemonCount;
 }
 
 
 async function prepareRendering(i, content) {
-    let pokemonRef = await getData(`pokemon/${i}`);
-    let name = await getPokemonName(pokemonRef);
-    let allTypes = await getPokemonTypes(pokemonRef);
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(i);
-    let bgColor = await setBgColor(mainType);
+    const pokemon = namesArr[i-1];
+
+    let name = pokemon.name;
+    let pokemonImg = pokemon.img;
+    let bgColor = pokemon.bgColor;
+    let allTypes = pokemon.allTypes;
 
     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
     renderTypeImages(`typesContainer${i}`, allTypes);
@@ -100,17 +88,6 @@ function filterPokemon() {
         return;
     }
 }
-
-
-// function renderPokemon(pokemonList) {
-//     let content = document.getElementById('content');
-//     content.innerHTML = '';
-
-//     console.log(pokemonList[0]);
-
-//     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
-//     renderTypeImages(`typesContainer${i}`, allTypes);
-// }
 
 
 function showSpinner() {
