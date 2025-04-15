@@ -115,7 +115,7 @@ function filterPokemon() {
             });
         }
     } else {
-        currentPokemonCount = 0;
+        currentPokemonCount = 1;
         pokemonCount = 21;
         // currentPokemonCount = 20;
         renderCards();
