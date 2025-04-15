@@ -5,15 +5,12 @@ function init() {
 const BASE_URL = "https://pokeapi.co/api/v2/";
 let currentPokemonID;
 
-
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
     return responseToJson;
 }
 
-
-/*<-----------------------------------------------------> */
 // RENDERING CARDS
 
 let currentPokemonCount = 1;
@@ -21,25 +18,42 @@ let pokemonCount = 21;
 
 let namesArr = [];
 
-
-// Alle Pokemon von API laden und Funktion (pushToLocalArr) aufrufen, um die Pokemon-Daten in ein lokales Array zu pushen
 async function loadAllPokemon() {
     showSpinner();
-    for (let i = 1; i < 152; i++) {
-        let pokemonRef = await getData(`pokemon/${i}`);
-        let name = await getPokemonName(pokemonRef);
-        let allTypes = await getPokemonTypes(pokemonRef);
-        let mainType = await getMainType(allTypes);
-        let pokemonImg = await getPokemonImg(i);
-        let bgColor = await setBgColor(mainType);
-
-        pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor);
-    }
+    const allPokemonData = await getAllPokemonData(151);
+    savePokemonData(allPokemonData);
     hideSpinner();
-    // Pokemon Cards erst rendern, sobald alle Pokemon geladen und ins lokale Array gepusht wurden
     renderCards();
 }
 
+async function getAllPokemonData(count) {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+        promises.push(loadSinglePokemon(i));
+    }
+    return await Promise.all(promises);
+}
+
+function savePokemonData(dataArr) {
+    dataArr.forEach(pokemon => namesArr.push({
+        name: pokemon.name,
+        allTypes: pokemon.allTypes,
+        mainType: pokemon.mainType,
+        img: pokemon.img,
+        bgColor: pokemon.bgColor
+    }));
+}
+
+async function loadSinglePokemon(i) {
+    let pokemonRef = await getData(`pokemon/${i}`);
+    let name = await getPokemonName(pokemonRef);
+    let allTypes = await getPokemonTypes(pokemonRef);
+    let mainType = await getMainType(allTypes);
+    let pokemonImg = await getPokemonImg(i);
+    let bgColor = await setBgColor(mainType);
+
+    return { name, allTypes, mainType, img: pokemonImg, bgColor };
+}
 
 // Pushen der Pokemon-Daten aller Pokemon in ein lokales Array
 function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
@@ -49,10 +63,8 @@ function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
         "mainType": mainType,
         "img": pokemonImg,
         "bgColor": bgColor
-    }
-    )
+    })
 }
-
 
 async function renderCards() {
     let content = document.getElementById('content');
@@ -63,7 +75,6 @@ async function renderCards() {
 
     currentPokemonCount = pokemonCount;
 }
-
 
 async function prepareRendering(i, content) {
     const pokemon = namesArr[i - 1];
@@ -76,22 +87,6 @@ async function prepareRendering(i, content) {
     content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
     renderTypeImages(`typesContainer${i}`, allTypes);
 }
-
-
-// function filterPokemon() {
-//     let searchValue = document.getElementById('search').value.trim();
-//     searchValue = searchValue.toLowerCase();
-
-//     if (searchValue.length >= 3) {
-//         for (let i = 0; i < namesArr.length; i++) {
-//             const name = namesArr[i].name;
-//             if (name.toLowerCase().includes(searchValue)) {
-//                 // console.log(name);
-//             }
-//         }
-//     }
-// }
-
 
 function filterPokemon() {
     let searchValue = document.getElementById('search').value.trim().toLowerCase();
@@ -121,7 +116,6 @@ function filterPokemon() {
         renderCards();
     }
 }
-
 
 function showSpinner() {
     let container = document.getElementById('loadingSpinner');
