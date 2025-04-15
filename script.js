@@ -78,17 +78,47 @@ async function prepareRendering(i, content) {
 }
 
 
+// function filterPokemon() {
+//     let searchValue = document.getElementById('search').value.trim();
+//     searchValue = searchValue.toLowerCase();
+
+//     if (searchValue.length >= 3) {
+//         for (let i = 0; i < namesArr.length; i++) {
+//             const name = namesArr[i].name;
+//             if (name.toLowerCase().includes(searchValue)) {
+//                 // console.log(name);
+//             }
+//         }
+//     }
+// }
+
+
 function filterPokemon() {
-    let searchValue = document.getElementById('search').value.trim();
-    searchValue = searchValue.toLowerCase();
+    let searchValue = document.getElementById('search').value.trim().toLowerCase();
+    const content = document.getElementById('content');
+    content.innerHTML = '';
 
     if (searchValue.length >= 3) {
-        for (let i = 0; i < namesArr.length; i++) {
-            const name = namesArr[i].name;
-            if (name.toLowerCase().includes(searchValue)) {
-                // console.log(name);
-            }
+        // 🛠 Finde echte Indexe im namesArr!
+        const filtered = namesArr
+            .map((pokemon, index) => ({ ...pokemon, originalIndex: index }))
+            .filter(p => p.name.toLowerCase().includes(searchValue));
+
+        if (filtered.length === 0) {
+            content.innerHTML = `<p>Kein Pokémon gefunden.</p>`;
+        } else {
+            filtered.forEach(pokemon => {
+                const i = pokemon.originalIndex + 1;
+
+                content.innerHTML += generateCard(i, pokemon.name, pokemon.img, pokemon.bgColor);
+                renderTypeImages(`typesContainer${i}`, pokemon.allTypes);
+            });
         }
+    } else {
+        currentPokemonCount = 0;
+        pokemonCount = 21;
+        // currentPokemonCount = 20;
+        renderCards();
     }
 }
 
