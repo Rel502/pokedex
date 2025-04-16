@@ -12,7 +12,6 @@ async function getData(path = "") {
 }
 
 // RENDERING CARDS
-
 let currentPokemonCount = 1;
 let pokemonCount = 21;
 
@@ -88,33 +87,51 @@ async function prepareRendering(i, content) {
     renderTypeImages(`typesContainer${i}`, allTypes);
 }
 
+
+// Suchfunktion - Nach bestimmten Pokemon filtern
 function filterPokemon() {
-    let searchValue = document.getElementById('search').value.trim().toLowerCase();
-    const content = document.getElementById('content');
-    content.innerHTML = '';
+    let searchValue = getSearchValue();
+    clearContent();
 
     if (searchValue.length >= 3) {
-        // 🛠 Finde echte Indexe im namesArr!
-        const filtered = namesArr
-            .map((pokemon, index) => ({ ...pokemon, originalIndex: index }))
-            .filter(p => p.name.toLowerCase().includes(searchValue));
-
-        if (filtered.length === 0) {
-            content.innerHTML = `<p>Kein Pokémon gefunden.</p>`;
-        } else {
-            filtered.forEach(pokemon => {
-                const i = pokemon.originalIndex + 1;
-
-                content.innerHTML += generateCard(i, pokemon.name, pokemon.img, pokemon.bgColor);
-                renderTypeImages(`typesContainer${i}`, pokemon.allTypes);
-            });
-        }
+        let filtered = getFilteredPokemon(searchValue);
+        filtered.length ? renderFiltered(filtered) : showNoResults();
     } else {
-        currentPokemonCount = 1;
-        pokemonCount = 21;
-        // currentPokemonCount = 20;
-        renderCards();
+        resetAndRenderAll();
     }
+}
+
+function getSearchValue() {
+    return document.getElementById('search').value.trim().toLowerCase();
+}
+
+function clearContent() {
+    document.getElementById('content').innerHTML = '';
+}
+
+function getFilteredPokemon(searchValue) {
+    return namesArr
+        .map((p, i) => ({ ...p, i }))
+        .filter(p => p.name.toLowerCase().includes(searchValue));
+}
+
+function renderFiltered(filtered) {
+    let content = document.getElementById('content');
+    filtered.forEach(p => {
+        let id = p.i + 1;
+        content.innerHTML += generateCard(id, p.name, p.img, p.bgColor);
+        renderTypeImages(`typesContainer${id}`, p.allTypes);
+    });
+}
+
+function showNoResults() {
+    document.getElementById('content').innerHTML = '<p>Kein Pokémon gefunden.</p>';
+}
+
+function resetAndRenderAll() {
+    currentPokemonCount = 1;
+    pokemonCount = 21;
+    renderCards();
 }
 
 function showSpinner() {
@@ -130,76 +147,69 @@ function hideSpinner() {
     toggleScrollbar('show');
 }
 
-
-/*<-----------------------------------------------------> */
 // RENDERING CARD INFO <--- opening single pokemon card
 async function renderCardInfo(id) {
     showPopup();
 
     let [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor] = await prepareCardInfoRendering(id);
-
     let cardContent = document.getElementById('popupOverlayBg');
     cardContent.innerHTML = '';
-
     cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
 
     insertOverlayImage(pokemonImg, bgColor);
     renderTypeImages(`typesContainerDescr${id}`, allTypes);
 }
 
-
 async function prepareCardInfoRendering(id) {
-    let pokemonRef = await getData(`pokemon/${id}`);
-    let pokemonName = await getPokemonName(pokemonRef);
-    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
-    let pokemonDescr = await pokemonDescrRef['flavor_text_entries'][25]['flavor_text'];
-    let allTypes = await getPokemonTypes(pokemonRef);
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(id);
-    let bgColor = await setBgColor(mainType);
+    const [ref, species] = await loadPokemonData(id);
+    const [name, types, img] = await loadPokemonDetails(ref, id);
+    const mainType = await getMainType(types);
+    const bgColor = await setBgColor(mainType);
+    const descr = getDescription(species);
 
-    return [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
+    return [ref, name, species, descr, types, mainType, img, bgColor];
 }
 
+async function loadPokemonData(id) {
+    return await Promise.all([
+        getData(`pokemon/${id}`),
+        getData(`pokemon-species/${id}`)
+    ]);
+}
 
-/*<-----------------------------------------------------> */
+async function loadPokemonDetails(ref, id) {
+    return await Promise.all([
+        getPokemonName(ref),
+        getPokemonTypes(ref),
+        getPokemonImg(id)
+    ]);
+}
+
+function getDescription(species) {
+    return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
+}
+
 // RENDERING -> STATS
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
-
     content.innerHTML += generateCardStats(id);
-
     await prepareStatsRendering(content, id);
 }
 
-
 async function prepareStatsRendering(content, id) {
     let pokemonRef = await getData(`pokemon/${id}`);
-
     let statsRef = await pokemonRef.stats;
 
     for (let statsIndex = 0; statsIndex < statsRef.length; statsIndex++) {
         let statName = statsRef[statsIndex].stat.name;
         let statValue = statsRef[statsIndex].base_stat;
-
         let statsContainer = document.getElementById('statsContainer');
 
-        statsContainer.innerHTML += /*html*/`
-            <div class="progress" role="progressbar">
-                <div class="progress-bar" style="width: ${statValue}%"><b>${statName}</b></div>
-            </div>
-        `;
+        statsContainer.innerHTML += generateProgressBar(statValue, statName);
     }
 }
 
-
-/*<-----------------------------------------------------> */
-/*<-----------------------------------------------------> */
-/*<-----------------------------------------------------> */
-/*<-----------------------------------------------------> */
-/*<-----------------------------------------------------> */
-// RENDERING -> EVOLUTION
 async function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
@@ -208,7 +218,6 @@ async function renderCardEvolution(id) {
 
     await prepareEvolutionRendering(id);
 }
-
 
 async function prepareEvolutionRendering(id) {
     let evolutionChainRef = await getEvolutionChainRef(id);
@@ -223,7 +232,6 @@ async function prepareEvolutionRendering(id) {
     }
 }
 
-
 async function getEvolutionChainRef(id) {
     let pokemonSpecies = await getData(`pokemon-species/${id}`);
     let evolutionChainUrl = await pokemonSpecies.evolution_chain.url;
@@ -231,29 +239,27 @@ async function getEvolutionChainRef(id) {
     return await evolutionData.chain;
 }
 
-
 async function getEvolutionData(evolutionChainUrl) {
     let response = await fetch(evolutionChainUrl);
     let responseToJson = await response.json();
     return responseToJson;
 }
 
-
 async function getEvolutionStages(evolutionChainRef) {
-    let evolves_to = evolutionChainRef.evolves_to;
     let evolutionStages = [];
     evolutionStages.push(insertFirstStageOfEvolution(evolutionChainRef));
-    let stageIndex = 1;
-
-    while (evolvesToNotEmpty(evolves_to)) {
-        const currentStage = evolves_to[0];
-        evolutionStages.push(insertRestOfEvolutionStages(currentStage, stageIndex));
-        evolves_to = currentStage.evolves_to;
-        stageIndex++;
-    }
-    return evolutionStages;
+    return addRemainingStages(evolutionChainRef.evolves_to, evolutionStages, 1);
 }
 
+function addRemainingStages(evolves_to, stages, stageIndex) {
+    while (evolvesToNotEmpty(evolves_to)) {
+        const current = evolves_to[0];
+        stages.push(insertRestOfEvolutionStages(current, stageIndex));
+        evolves_to = current.evolves_to;
+        stageIndex++;
+    }
+    return stages;
+}
 
 function insertRestOfEvolutionStages(currentStage, stageIndex) {
     return ({
@@ -263,11 +269,9 @@ function insertRestOfEvolutionStages(currentStage, stageIndex) {
     });
 }
 
-
 function evolvesToNotEmpty(evolves_to) {
     return evolves_to.length !== 0;
 }
-
 
 function insertFirstStageOfEvolution(evolutionChainRef) {
     return ({
@@ -277,8 +281,6 @@ function insertFirstStageOfEvolution(evolutionChainRef) {
     })
 };
 
-
-/*<-----------------------------------------------------> */
 // NEXT / PREVIOUS POKEMON
 function nextPokemon(id) {
     if (id < 151) {
@@ -289,7 +291,6 @@ function nextPokemon(id) {
     renderCardInfo(id);
 }
 
-
 function previousPokemon(id) {
     id--;
     if (!id < 1) {
@@ -298,7 +299,6 @@ function previousPokemon(id) {
         return;
     }
 }
-
 
 function insertOverlayImage(image, bgColor) {
     let imageBackground = document.getElementById('overlayImgContainer');
@@ -311,20 +311,17 @@ function insertOverlayImage(image, bgColor) {
     currentImage.src = image;
 }
 
-
 function showPopup() {
     togglePopup('show');
     toggleHeader('hide');
     toggleScrollbar('hide');
 }
 
-
 function closePopup() {
     togglePopup('hide');
     toggleHeader('show');
     toggleScrollbar('show');
 }
-
 
 // Close overlay if click on background
 document.addEventListener("click", (event) => {
@@ -335,7 +332,6 @@ document.addEventListener("click", (event) => {
     }
 });
 
-
 function togglePopup(param) {
     if (param == 'show') {
         document.getElementById('popupOverlayBg').classList.remove('d-none');
@@ -343,7 +339,6 @@ function togglePopup(param) {
         document.getElementById('popupOverlayBg').classList.add('d-none');
     }
 }
-
 
 function toggleHeader(param) {
     if (param == 'show') {
@@ -353,7 +348,6 @@ function toggleHeader(param) {
     }
 }
 
-
 function toggleScrollbar(param) {
     if (param == 'show') {
         document.querySelector('body').classList.remove('overflow-hidden');
@@ -361,7 +355,6 @@ function toggleScrollbar(param) {
         document.querySelector('body').classList.add('overflow-hidden');
     }
 }
-
 
 function renderTypeImages(container, allTypes) {
     let typesContainer = document.getElementById(container);
@@ -372,7 +365,6 @@ function renderTypeImages(container, allTypes) {
     }
 }
 
-
 async function getPokemonTypes(pokemonRef) {
     let typesArr = await pokemonRef['types'];
     let allTypes = [];
@@ -381,23 +373,19 @@ async function getPokemonTypes(pokemonRef) {
         let type = typesArr[i]['type']['name'];
         allTypes.push(type);
     }
-
     return allTypes;
 }
-
 
 async function getMainType(allTypes) {
     let mainType = allTypes[0];
     return mainType;
 }
 
-
 function setBgColor(mainType) {
     let bgColor = `bg-color-${mainType}`;
     return bgColor;
 
 }
-
 
 function increasePokeCount() {
     if (pokemonCount < 151) {
@@ -408,19 +396,16 @@ function increasePokeCount() {
     renderCards();
 }
 
-
 async function getPokemonImg(i) {
     let pokemonRef = await getData(`pokemon/${i}`);
     let pokemonImg = pokemonRef['sprites']['front_default'];
     return pokemonImg;
 }
 
-
 async function getPokemonName(pokemonRef) {
     let name = await pokemonRef['name'];
     return name;
 }
-
 
 function convertFirstLetterUp(string) {
     let stringInUpperCase = string.toUpperCase();

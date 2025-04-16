@@ -145,3 +145,12 @@ function generateEvolutionStages(currentStage) {
     </div>
 `;
 }
+
+
+function generateProgressBar(statValue, statName) {
+    return /*html*/`
+    <div class="progress" role="progressbar">
+        <div class="progress-bar" style="width: ${statValue}%"><b>${statName}</b></div>
+    </div>
+`;
+}
