@@ -33,7 +33,6 @@ function generateTypeIcon(srcRef) {
     `;
 }
 
-
 function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr) {
     return /*html*/`
         <div class="overlay-outer-div">
@@ -88,7 +87,6 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
     `;
 }
 
-
 function generateCardStats(id) {
     return /*html*/`
     <ul class="nav nav-pills">
@@ -111,7 +109,6 @@ function generateCardStats(id) {
     </div>
 `;
 }
-
 
 function generateCardEvolution(id) {
     return /*html*/`
@@ -136,7 +133,6 @@ function generateCardEvolution(id) {
 `;
 }
 
-
 function generateEvolutionStages(currentStage) {
     return /*html*/`
     <div>
@@ -145,7 +141,6 @@ function generateEvolutionStages(currentStage) {
     </div>
 `;
 }
-
 
 function generateProgressBar(statValue, statName) {
     return /*html*/`

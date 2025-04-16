@@ -11,7 +11,7 @@ async function getData(path = "") {
     return responseToJson;
 }
 
-// RENDERING CARDS
+// Rendering cards
 let currentPokemonCount = 1;
 let pokemonCount = 21;
 
@@ -54,7 +54,7 @@ async function loadSinglePokemon(i) {
     return { name, allTypes, mainType, img: pokemonImg, bgColor };
 }
 
-// Pushen der Pokemon-Daten aller Pokemon in ein lokales Array
+// Pushing the Pokemon data of all Pokemon into a local array
 function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
     namesArr.push({
         "name": name,
@@ -93,14 +93,13 @@ function showSpinner() {
     toggleScrollbar('hide');
 }
 
-
 function hideSpinner() {
     let container = document.getElementById('loadingSpinner');
     container.classList.add('d-none');
     toggleScrollbar('show');
 }
 
-// RENDERING CARD INFO <--- opening single pokemon card
+// RENDERING CARD INFO <--- opening a single pokemon card
 async function renderCardInfo(id) {
     showPopup();
 
@@ -142,7 +141,7 @@ function getDescription(species) {
     return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
 }
 
-// RENDERING -> STATS
+// RENDERING -> Pokemon Stats 
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
@@ -337,7 +336,6 @@ async function getMainType(allTypes) {
 function setBgColor(mainType) {
     let bgColor = `bg-color-${mainType}`;
     return bgColor;
-
 }
 
 function increasePokeCount() {
