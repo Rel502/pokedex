@@ -49,6 +49,18 @@ header img {
     font-style: normal;
 }
 
+@media (min-width: 1441px) {
+    .mid-content-wrapper {
+        max-width: 1440px;
+    }
+}
+
+@media (min-width: 1921px) {
+    .header-inner-div {
+        margin: 20% 20%;
+    }
+}
+
 .d-none {
     display: none;
 }
