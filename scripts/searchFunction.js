@@ -6,8 +6,10 @@ function filterPokemon() {
     if (searchValue.length >= 3) {
         let filtered = getFilteredPokemon(searchValue);
         filtered.length ? renderFiltered(filtered) : showNoResults();
+        toggleBtn('loadMoreBtn', 'hide');
     } else {
         resetAndRenderAll();
+        toggleBtn('loadMoreBtn', 'show');
     }
 }
 
@@ -42,4 +44,14 @@ function resetAndRenderAll() {
     currentPokemonCount = 1;
     pokemonCount = 21;
     renderCards();
+}
+
+function toggleBtn(id, state) {
+    let button = document.getElementById(id);
+
+    if (state === 'hide') {
+        button.classList.add('d-none');
+    } else if (state === 'show') {
+        button.classList.remove('d-none');
+    }
 }
