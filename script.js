@@ -22,7 +22,6 @@ async function loadPokemon(startIndex, count) {
     for (let i = startIndex; i < startIndex + count; i++) {
         let pokemonRef = await getData(`pokemon/${i + 1}`);
         AllPokemonData.push(pokemonRef);
-        // console.log(`#${i+1}: ${pokemonRef.name}`);
     }
 
     hideSpinner();
@@ -36,22 +35,39 @@ function renderCards() {
     CurrentPokemonData = AllPokemonData;
 
     for (let i = 0; i < CurrentPokemonData.length; i++) {
-        let pRef = CurrentPokemonData[i];
-
-        let name = pRef.name;
-        let pokemonImg = getPokemonImg(pRef);
-        let allTypes = getPokemonTypes(pRef);
-        let mainType = getMainType(allTypes);
-        let bgColor = setBgColor(mainType);
+        let [name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
 
         content.innerHTML += generateCard(i + 1, name, pokemonImg, bgColor)
         renderTypeImages(`typesContainer${i + 1}`, allTypes);
     }
 }
 
+function prepareRendering(i) {
+    let pRef = CurrentPokemonData[i];
+    let name = pRef.name;
+    let pokemonImg = getPokemonImg(pRef);
+    let allTypes = getPokemonTypes(pRef);
+    let mainType = getMainType(allTypes);
+    let bgColor = setBgColor(mainType);
+
+    return [name, pokemonImg, bgColor, allTypes];
+}
+
 async function renderCardInfo(id) {
     showPopup();
 
+    let [pokemonImg, name, mainType, pokemonDescr, bgColor, allTypes] = await prepareCardInfoRendering(id);
+    let cardContent = document.getElementById('popupOverlayBg');
+
+    cardContent.innerHTML = '';
+    cardContent.innerHTML += generateCardDescription(id, pokemonImg, name, mainType, pokemonDescr);
+
+    hidePrevButtonIfFirstPokemon(id);
+    insertOverlayImage(pokemonImg, bgColor);
+    renderTypeImages(`typesContainerDescr${id}`, allTypes);
+}
+
+async function prepareCardInfoRendering(id) {
     let pRef = CurrentPokemonData[id - 1];
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
@@ -61,25 +77,8 @@ async function renderCardInfo(id) {
     let mainType = getMainType(allTypes);
     let bgColor = setBgColor(mainType);
 
-    let cardContent = document.getElementById('popupOverlayBg');
-    cardContent.innerHTML = '';
-    cardContent.innerHTML += generateCardDescription(id, pokemonImg, name, mainType, pokemonDescr);
-
-    hidePrevButtonIfFirstPokemon(id);
-
-    insertOverlayImage(pokemonImg, bgColor);
-    renderTypeImages(`typesContainerDescr${id}`, allTypes);
+    return [pokemonImg, name, mainType, pokemonDescr, bgColor, allTypes];
 }
-
-// async function prepareCardInfoRendering(id) {
-//     const [ref, species] = await loadPokemonData(id);
-//     const [name, types, img] = await loadPokemonDetails(ref, id);
-//     const mainType = await getMainType(types);
-//     const bgColor = await setBgColor(mainType);
-//     const descr = getDescription(species);
-
-//     return [ref, name, species, descr, types, mainType, img, bgColor];
-// }
 
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
