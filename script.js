@@ -194,6 +194,7 @@ function previousPokemon(id) {
     if (!id < 1) {
         renderCardInfo(id);
     } else {
+        toggleBtn('prevPokemonBtn', 'hide');
         return;
     }
 }

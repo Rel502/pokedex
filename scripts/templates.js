@@ -44,7 +44,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                 
                 <div class="d-flex justify-content-center align-items-center h-100-percent">
                     <!-- Previous Pokemon -->
-                    <img onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
+                    <img id="prevPokemonBtn" onclick="previousPokemon('${id}')" class="icons pointer ml-16" src="./assets/icons/left.png" alt="left">
                     
                     <!-- Pokemon Image, Types, ID -->
                     <div class="d-flex flex-column justify-content-center align-items-center h-100-percent w-100-percent"> 
@@ -54,7 +54,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                     </div>
                     
                     <!-- Next Pokemon -->
-                    <img onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
+                    <img id="nextPokemonBtn" onclick="nextPokemon('${id}')" class="icons pointer mr-16" src="./assets/icons/right.png" alt="right">
                 </div>
             </section>
 
