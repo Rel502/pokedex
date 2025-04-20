@@ -22,7 +22,7 @@ async function loadPokemon(startIndex, count) {
     showSpinner();
 
     for (let i = startIndex; i < startIndex + count; i++) {
-        let pokemonRef = await getData(`pokemon/${i+1}`);
+        let pokemonRef = await getData(`pokemon/${i + 1}`);
         AllPokemonData.push(pokemonRef);
         // console.log(`#${i+1}: ${pokemonRef.name}`);
     }
@@ -46,8 +46,8 @@ function renderCards() {
         let mainType = getMainType(allTypes);
         let bgColor = setBgColor(mainType);
 
-        content.innerHTML += generateCard(i+1, name, pokemonImg, bgColor)
-        renderTypeImages(`typesContainer${i+1}`, allTypes);
+        content.innerHTML += generateCard(i + 1, name, pokemonImg, bgColor)
+        renderTypeImages(`typesContainer${i + 1}`, allTypes);
     }
 }
 
@@ -63,7 +63,7 @@ function renderCards() {
 async function renderCardInfo(id) {
     showPopup();
 
-    let pRef = CurrentPokemonData[id-1];
+    let pRef = CurrentPokemonData[id - 1];
 
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
@@ -201,13 +201,36 @@ function insertFirstStageOfEvolution(evolutionChainRef) {
 //-> check loadedAmount?
 //-> falls nein, -> loadMore!
 
+
+
+
+// function nextPokemon(id) {
+//     if (id < 151) {
+//         id++;
+//     } else {
+//         id = 1;
+//     }
+//     renderCardInfo(id);
+// }
+
 function nextPokemon(id) {
     if (id < 151) {
         id++;
     } else {
         id = 1;
     }
-    renderCardInfo(id);
+
+    checkNextPokemon(id);
+}
+
+function checkNextPokemon(id) {
+    if (!CurrentPokemonData[id-1]) {
+        increasePokeCount().then(() => {
+            renderCardInfo(id);
+        });
+    } else {
+        renderCardInfo(id);
+    }
 }
 
 function previousPokemon(id) {
