@@ -51,20 +51,10 @@ function renderCards() {
     }
 }
 
-
-
-
-
-
-
-
-// RENDERING CARD INFO <--- opening a single pokemon card
-
 async function renderCardInfo(id) {
     showPopup();
 
     let pRef = CurrentPokemonData[id - 1];
-
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
     let pokemonDescr = getDescription(pokemonDescrRef);
@@ -81,40 +71,26 @@ async function renderCardInfo(id) {
     renderTypeImages(`typesContainerDescr${id}`, allTypes);
 }
 
+// async function prepareCardInfoRendering(id) {
+//     const [ref, species] = await loadPokemonData(id);
+//     const [name, types, img] = await loadPokemonDetails(ref, id);
+//     const mainType = await getMainType(types);
+//     const bgColor = await setBgColor(mainType);
+//     const descr = getDescription(species);
 
+//     return [ref, name, species, descr, types, mainType, img, bgColor];
+// }
 
-
-async function prepareCardInfoRendering(id) {
-    const [ref, species] = await loadPokemonData(id);
-    const [name, types, img] = await loadPokemonDetails(ref, id);
-    const mainType = await getMainType(types);
-    const bgColor = await setBgColor(mainType);
-    const descr = getDescription(species);
-
-    return [ref, name, species, descr, types, mainType, img, bgColor];
-}
-
-function getDescription(species) {
-    return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
-}
-
-
-
-
-
-
-
-// RENDERING -> Pokemon Stats 
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
     content.innerHTML += generateCardStats(id);
-    await prepareStatsRendering(content, id);
+    prepareStatsRendering(id);
 }
 
-async function prepareStatsRendering(content, id) {
-    let pokemonRef = await getData(`pokemon/${id}`);
-    let statsRef = await pokemonRef.stats;
+function prepareStatsRendering(id) {
+    let pRef = CurrentPokemonData[id-1];
+    let statsRef = pRef.stats;
 
     for (let statsIndex = 0; statsIndex < statsRef.length; statsIndex++) {
         let statName = statsRef[statsIndex].stat.name;
@@ -124,6 +100,20 @@ async function prepareStatsRendering(content, id) {
         statsContainer.innerHTML += generateProgressBar(statValue, statName);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -> FIXEN!
 
 async function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
@@ -147,9 +137,9 @@ async function prepareEvolutionRendering(id) {
     }
 }
 
-async function getEvolutionChainRef(id) {
-    let pokemonSpecies = await getData(`pokemon-species/${id}`);
-    let evolutionChainUrl = await pokemonSpecies.evolution_chain.url;
+async function getEvolutionChainRef(id) { // -> - async
+    let pokemonSpecies = await getData(`pokemon-species/${id}`); // -> descriptionRef
+    let evolutionChainUrl = await pokemonSpecies.evolution_chain.url; // -> pokemonSpecies.evolution_chain.url
     let evolutionData = await getEvolutionData(evolutionChainUrl);
     return await evolutionData.chain;
 }
@@ -165,6 +155,9 @@ async function getEvolutionStages(evolutionChainRef) {
     evolutionStages.push(insertFirstStageOfEvolution(evolutionChainRef));
     return addRemainingStages(evolutionChainRef.evolves_to, evolutionStages, 1);
 }
+
+
+
 
 function addRemainingStages(evolves_to, stages, stageIndex) {
     while (evolvesToNotEmpty(evolves_to)) {
@@ -195,23 +188,6 @@ function insertFirstStageOfEvolution(evolutionChainRef) {
         url: evolutionChainRef.species.url,
     })
 };
-
-// NEXT / PREVIOUS POKEMON
-//-> Abfrage: nächstes Pokemon bereits vorhanden in CurrentPokemonData?
-//-> check loadedAmount?
-//-> falls nein, -> loadMore!
-
-
-
-
-// function nextPokemon(id) {
-//     if (id < 151) {
-//         id++;
-//     } else {
-//         id = 1;
-//     }
-//     renderCardInfo(id);
-// }
 
 function nextPokemon(id) {
     if (id < 151) {
@@ -331,6 +307,10 @@ function setBgColor(mainType) {
 function getPokemonImg(pRef) {
     let pokemonImg = pRef['sprites']['front_default'];
     return pokemonImg;
+}
+
+function getDescription(species) {
+    return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
 }
 
 async function getPokemonName(pokemonRef) {
