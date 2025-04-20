@@ -68,29 +68,21 @@ async function renderCardInfo(id) {
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
     let pokemonDescr = getDescription(pokemonDescrRef);
-    let allTypes;
-    let mainType;
-    let pokemonImg;
-    let bgColor;
-}
+    let pokemonImg = getPokemonImg(pRef);
+    let allTypes = getPokemonTypes(pRef);
+    let mainType = getMainType(allTypes);
+    let bgColor = setBgColor(mainType);
 
-// async function loadDescription(name) {
-    
-// }
-
-
-
-async function renderCardInfo(id) {
-    showPopup();
-
-    let [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor] = await prepareCardInfoRendering(id);
     let cardContent = document.getElementById('popupOverlayBg');
     cardContent.innerHTML = '';
-    cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
+    cardContent.innerHTML += generateCardDescription(id, pokemonImg, name, mainType, pokemonDescr);
 
     insertOverlayImage(pokemonImg, bgColor);
     renderTypeImages(`typesContainerDescr${id}`, allTypes);
 }
+
+
+
 
 async function prepareCardInfoRendering(id) {
     const [ref, species] = await loadPokemonData(id);
@@ -102,86 +94,9 @@ async function prepareCardInfoRendering(id) {
     return [ref, name, species, descr, types, mainType, img, bgColor];
 }
 
-async function loadPokemonData(id) {
-    return await Promise.all([
-        getData(`pokemon/${id}`),
-        getData(`pokemon-species/${id}`)
-    ]);
-}
-
-async function loadPokemonDetails(ref, id) {
-    return await Promise.all([
-        getPokemonName(ref),
-        getPokemonTypes(ref),
-        getPokemonImg(id)
-    ]);
-}
-
 function getDescription(species) {
     return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
 }
-
-
-
-// ----------> N E U E R    C O D E <--------------------
-// RENDERING CARD INFO <--- opening a single pokemon card
-// ----------> N E U E R    C O D E <--------------------
-
-// async function renderCardInfo(id) {
-//     showPopup();
-
-//     let [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor] = prepareCardInfoRendering(id);
-//     let cardContent = document.getElementById('popupOverlayBg');
-//     cardContent.innerHTML = '';
-//     cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
-
-//     insertOverlayImage(pokemonImg, bgColor);
-//     renderTypeImages(`typesContainerDescr${id}`, allTypes);
-// }
-
-// // Neue Version von prepareCardInfoRendering, die auf CurrentPokemonData zugreift
-// function prepareCardInfoRendering(id) {
-//     // Zugriff auf die Daten im CurrentPokemonData Array
-//     const pokemonRef = CurrentPokemonData[id - 1];  // id - 1, weil das Array bei 0 beginnt
-//     const pokemonName = pokemonRef.name;
-//     const allTypes = getPokemonTypes(pokemonRef);
-//     const pokemonImg = getPokemonImg(pokemonRef);
-//     const mainType = getMainType(allTypes);
-//     const bgColor = setBgColor(mainType);
-//     const pokemonDescr = getDescription(pokemonRef);
-
-//     return [pokemonRef, pokemonName, pokemonRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
-// }
-
-// // Diese Funktion extrahiert die Beschreibung aus den Species-Daten
-// function getDescription(pokemonRef) {
-//     // Hier verwenden wir das aktuelle Pokémon, das im Array ist
-//     const species = pokemonRef.species;
-//     return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
-// }
-
-// // Beispiel für die Hilfsfunktionen (kannst du je nach Bedarf anpassen):
-// function getPokemonTypes(pokemonRef) {
-//     return pokemonRef.types.map(type => type.type.name);
-// }
-
-// function getPokemonImg(pokemonRef) {
-//     return pokemonRef.sprites.front_default;
-// }
-
-// function getMainType(allTypes) {
-//     return allTypes[0]; // Zum Beispiel, wir nehmen den ersten Typ als Main-Type
-// }
-
-// function setBgColor(mainType) {
-//     // Hier kannst du die Hintergrundfarbe setzen, basierend auf dem Typ
-//     return `bg-color-${mainType}`;
-// }
-
-
-
-
-
 
 
 
@@ -282,6 +197,10 @@ function insertFirstStageOfEvolution(evolutionChainRef) {
 };
 
 // NEXT / PREVIOUS POKEMON
+//-> Abfrage: nächstes Pokemon bereits vorhanden in CurrentPokemonData?
+//-> check loadedAmount?
+//-> falls nein, -> loadMore!
+
 function nextPokemon(id) {
     if (id < 151) {
         id++;
