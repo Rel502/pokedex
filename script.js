@@ -1,9 +1,16 @@
-function init() {
-    loadAllPokemon();
+async function init() {
+    await loadPokemon(loadedCount, 20);
+    loadedCount += 20;
 }
 
+let AllPokemonData = [];
+let CurrentPokemonData = [];
+
+let loadedCount = 0;
+// let currentPokemonCount = 1;
+// let pokemonCount = 21;
+
 const BASE_URL = "https://pokeapi.co/api/v2/";
-let currentPokemonID;
 
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
@@ -11,95 +18,68 @@ async function getData(path = "") {
     return responseToJson;
 }
 
-// Rendering cards
-let currentPokemonCount = 1;
-let pokemonCount = 21;
-
-let namesArr = [];
-
-async function loadAllPokemon() {
+async function loadPokemon(startIndex, count) {
     showSpinner();
-    const allPokemonData = await getAllPokemonData(151);
-    savePokemonData(allPokemonData);
+
+    for (let i = startIndex; i < startIndex + count; i++) {
+        let pokemonRef = await getData(`pokemon/${i+1}`);
+        AllPokemonData.push(pokemonRef);
+        // console.log(`#${i+1}: ${pokemonRef.name}`);
+    }
+
     hideSpinner();
     renderCards();
 }
 
-async function getAllPokemonData(count) {
-    const promises = [];
-    for (let i = 1; i <= count; i++) {
-        promises.push(loadSinglePokemon(i));
-    }
-    return await Promise.all(promises);
-}
-
-function savePokemonData(dataArr) {
-    dataArr.forEach(pokemon => namesArr.push({
-        name: pokemon.name,
-        allTypes: pokemon.allTypes,
-        mainType: pokemon.mainType,
-        img: pokemon.img,
-        bgColor: pokemon.bgColor
-    }));
-}
-
-async function loadSinglePokemon(i) {
-    let pokemonRef = await getData(`pokemon/${i}`);
-    let name = await getPokemonName(pokemonRef);
-    let allTypes = await getPokemonTypes(pokemonRef);
-    let mainType = await getMainType(allTypes);
-    let pokemonImg = await getPokemonImg(i);
-    let bgColor = await setBgColor(mainType);
-
-    return { name, allTypes, mainType, img: pokemonImg, bgColor };
-}
-
-// Pushing the Pokemon data of all Pokemon into a local array
-function pushToLocalArr(name, allTypes, mainType, pokemonImg, bgColor) {
-    namesArr.push({
-        "name": name,
-        "allTypes": allTypes,
-        "mainType": mainType,
-        "img": pokemonImg,
-        "bgColor": bgColor
-    })
-}
-
-async function renderCards() {
+function renderCards() {
     let content = document.getElementById('content');
+    content.innerHTML = "";
 
-    for (let i = currentPokemonCount; i < pokemonCount; i++) {
-        prepareRendering(i, content);
+    CurrentPokemonData = AllPokemonData;
+
+    for (let i = 0; i < CurrentPokemonData.length; i++) {
+        let pRef = CurrentPokemonData[i];
+
+        let name = pRef.name;
+        let pokemonImg = getPokemonImg(pRef);
+        let allTypes = getPokemonTypes(pRef);
+        let mainType = getMainType(allTypes);
+        let bgColor = setBgColor(mainType);
+
+        content.innerHTML += generateCard(i+1, name, pokemonImg, bgColor)
+        renderTypeImages(`typesContainer${i+1}`, allTypes);
     }
-
-    currentPokemonCount = pokemonCount;
 }
 
-async function prepareRendering(i, content) {
-    const pokemon = namesArr[i - 1];
 
-    let name = pokemon.name;
-    let pokemonImg = pokemon.img;
-    let bgColor = pokemon.bgColor;
-    let allTypes = pokemon.allTypes;
 
-    content.innerHTML += generateCard(i, name, pokemonImg, bgColor);
-    renderTypeImages(`typesContainer${i}`, allTypes);
-}
 
-function showSpinner() {
-    let container = document.getElementById('loadingSpinner');
-    container.classList.remove('d-none');
-    toggleScrollbar('hide');
-}
 
-function hideSpinner() {
-    let container = document.getElementById('loadingSpinner');
-    container.classList.add('d-none');
-    toggleScrollbar('show');
-}
+
+
 
 // RENDERING CARD INFO <--- opening a single pokemon card
+
+async function renderCardInfo(id) {
+    showPopup();
+
+    let pRef = CurrentPokemonData[id-1];
+
+    let name = pRef.name;
+    let pokemonDescrRef = await getData(`pokemon-species/${id}`);
+    let pokemonDescr = getDescription(pokemonDescrRef);
+    let allTypes;
+    let mainType;
+    let pokemonImg;
+    let bgColor;
+}
+
+// async function loadDescription(name) {
+    
+// }
+
+
+
 async function renderCardInfo(id) {
     showPopup();
 
@@ -140,6 +120,74 @@ async function loadPokemonDetails(ref, id) {
 function getDescription(species) {
     return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
 }
+
+
+
+// ----------> N E U E R    C O D E <--------------------
+// RENDERING CARD INFO <--- opening a single pokemon card
+// ----------> N E U E R    C O D E <--------------------
+
+// async function renderCardInfo(id) {
+//     showPopup();
+
+//     let [pokemonRef, pokemonName, pokemonDescrRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor] = prepareCardInfoRendering(id);
+//     let cardContent = document.getElementById('popupOverlayBg');
+//     cardContent.innerHTML = '';
+//     cardContent.innerHTML += generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonDescr);
+
+//     insertOverlayImage(pokemonImg, bgColor);
+//     renderTypeImages(`typesContainerDescr${id}`, allTypes);
+// }
+
+// // Neue Version von prepareCardInfoRendering, die auf CurrentPokemonData zugreift
+// function prepareCardInfoRendering(id) {
+//     // Zugriff auf die Daten im CurrentPokemonData Array
+//     const pokemonRef = CurrentPokemonData[id - 1];  // id - 1, weil das Array bei 0 beginnt
+//     const pokemonName = pokemonRef.name;
+//     const allTypes = getPokemonTypes(pokemonRef);
+//     const pokemonImg = getPokemonImg(pokemonRef);
+//     const mainType = getMainType(allTypes);
+//     const bgColor = setBgColor(mainType);
+//     const pokemonDescr = getDescription(pokemonRef);
+
+//     return [pokemonRef, pokemonName, pokemonRef, pokemonDescr, allTypes, mainType, pokemonImg, bgColor];
+// }
+
+// // Diese Funktion extrahiert die Beschreibung aus den Species-Daten
+// function getDescription(pokemonRef) {
+//     // Hier verwenden wir das aktuelle Pokémon, das im Array ist
+//     const species = pokemonRef.species;
+//     return species['flavor_text_entries'][25]?.['flavor_text'] || 'Keine Beschreibung';
+// }
+
+// // Beispiel für die Hilfsfunktionen (kannst du je nach Bedarf anpassen):
+// function getPokemonTypes(pokemonRef) {
+//     return pokemonRef.types.map(type => type.type.name);
+// }
+
+// function getPokemonImg(pokemonRef) {
+//     return pokemonRef.sprites.front_default;
+// }
+
+// function getMainType(allTypes) {
+//     return allTypes[0]; // Zum Beispiel, wir nehmen den ersten Typ als Main-Type
+// }
+
+// function setBgColor(mainType) {
+//     // Hier kannst du die Hintergrundfarbe setzen, basierend auf dem Typ
+//     return `bg-color-${mainType}`;
+// }
+
+
+
+
+
+
+
+
+
+
+
 
 // RENDERING -> Pokemon Stats 
 async function renderCardStats(id) {
@@ -317,8 +365,8 @@ function renderTypeImages(container, allTypes) {
     }
 }
 
-async function getPokemonTypes(pokemonRef) {
-    let typesArr = await pokemonRef['types'];
+function getPokemonTypes(pokemonRef) {
+    let typesArr = pokemonRef['types'];
     let allTypes = [];
 
     for (let i = 0; i < typesArr.length; i++) {
@@ -328,7 +376,7 @@ async function getPokemonTypes(pokemonRef) {
     return allTypes;
 }
 
-async function getMainType(allTypes) {
+function getMainType(allTypes) {
     let mainType = allTypes[0];
     return mainType;
 }
@@ -338,18 +386,8 @@ function setBgColor(mainType) {
     return bgColor;
 }
 
-function increasePokeCount() {
-    if (pokemonCount < 151) {
-        pokemonCount += 20;
-    } else {
-        return;
-    }
-    renderCards();
-}
-
-async function getPokemonImg(i) {
-    let pokemonRef = await getData(`pokemon/${i}`);
-    let pokemonImg = pokemonRef['sprites']['front_default'];
+function getPokemonImg(pRef) {
+    let pokemonImg = pRef['sprites']['front_default'];
     return pokemonImg;
 }
 
@@ -365,4 +403,52 @@ function convertFirstLetterUp(string) {
     let elseLetters = string.slice(1);
 
     return firstLetter + elseLetters;
+}
+
+async function increasePokeCount() {
+    let loadAmount = updateLoadAmount();
+    if (loadAmount === 0) return;
+
+    await loadPokemon(loadedCount, loadAmount);
+    loadedCount += loadAmount;
+
+    checkLoadedCount();
+}
+
+function updateLoadAmount() {
+    if (loadedCount >= 151) {
+        return 0;
+    } else if (loadedCount < 131) {
+        return 20;
+    } else {
+        return 151 - loadedCount;
+    }
+}
+
+function checkLoadedCount() {
+    if (loadedCount >= 151) {
+        toggleBtn('loadMoreBtn', 'hide');
+    }
+}
+
+function toggleBtn(id, state) {
+    let button = document.getElementById(id);
+
+    if (state === 'hide') {
+        button.classList.add('d-none');
+    } else if (state === 'show') {
+        button.classList.remove('d-none');
+    }
+}
+
+function showSpinner() {
+    let container = document.getElementById('loadingSpinner');
+    container.classList.remove('d-none');
+    toggleScrollbar('hide');
+}
+
+function hideSpinner() {
+    let container = document.getElementById('loadingSpinner');
+    container.classList.add('d-none');
+    toggleScrollbar('show');
 }

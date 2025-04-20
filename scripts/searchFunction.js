@@ -45,13 +45,3 @@ function resetAndRenderAll() {
     pokemonCount = 21;
     renderCards();
 }
-
-function toggleBtn(id, state) {
-    let button = document.getElementById(id);
-
-    if (state === 'hide') {
-        button.classList.add('d-none');
-    } else if (state === 'show') {
-        button.classList.remove('d-none');
-    }
-}
