@@ -6,6 +6,12 @@ async function init() {
 let AllPokemonData = [];
 let CurrentPokemonData = [];
 
+let AllNamesArr = [];
+// -> AllNamesArr[i].name -> "bulbasaur"
+// -> AllNamesArr[i].url -> "https://pokeapi.co/api/v2/pokemon/1/"
+
+let CurrentNamesArr = [];
+
 let loadedCount = 0;
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
@@ -23,9 +29,22 @@ async function loadPokemon(startIndex, count) {
         let pokemonRef = await getData(`pokemon/${i + 1}`);
         AllPokemonData.push(pokemonRef);
     }
-
+    
+    loadAllNames(); // <-- load all names ref and url ref from pokemon?limit=151
     hideSpinner();
     renderCards();
+}
+
+async function loadAllNames() {
+    let response = await getData(`pokemon?limit=151`);
+    let allNamesRef = response.results;
+    
+    for (let i = 0; i < 151; i++) {
+        let element = allNamesRef[i];
+        AllNamesArr.push(element);
+    }
+
+    console.log(AllNamesArr);
 }
 
 function renderCards() {
