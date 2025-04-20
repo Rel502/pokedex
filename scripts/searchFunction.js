@@ -1,4 +1,3 @@
-// Suchfunktion - Nach bestimmten Pokemon filtern
 function filterPokemon() {
     let searchValue = getSearchValue();
     clearContent();
@@ -22,7 +21,7 @@ function clearContent() {
 }
 
 function getFilteredPokemon(searchValue) {
-    return namesArr
+    return CurrentPokemonData
         .map((p, i) => ({ ...p, i }))
         .filter(p => p.name.toLowerCase().includes(searchValue));
 }
