@@ -131,6 +131,12 @@ function toggleBtn(id, state) {
     }
 }
 
+function hidePrevButtonIfFirstPokemon(id) {
+    if (id == 1) {
+        toggleBtn('prevPokemonBtn', 'hide');
+    }
+}
+
 function showSpinner() {
     let container = document.getElementById('loadingSpinner');
     container.classList.remove('d-none');

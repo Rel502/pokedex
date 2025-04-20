@@ -65,6 +65,8 @@ async function renderCardInfo(id) {
     cardContent.innerHTML = '';
     cardContent.innerHTML += generateCardDescription(id, pokemonImg, name, mainType, pokemonDescr);
 
+    hidePrevButtonIfFirstPokemon(id);
+
     insertOverlayImage(pokemonImg, bgColor);
     renderTypeImages(`typesContainerDescr${id}`, allTypes);
 }
@@ -87,7 +89,7 @@ async function renderCardStats(id) {
 }
 
 function prepareStatsRendering(id) {
-    let pRef = CurrentPokemonData[id-1];
+    let pRef = CurrentPokemonData[id - 1];
     let statsRef = pRef.stats;
 
     for (let statsIndex = 0; statsIndex < statsRef.length; statsIndex++) {
@@ -121,9 +123,9 @@ async function prepareEvolutionRendering(id) {
     }
 }
 
-async function getEvolutionChainRef(id) { 
+async function getEvolutionChainRef(id) {
     let pokemonSpeciesRef = await getData(`pokemon-species/${id}`);
-    let evolutionChainUrl = await pokemonSpeciesRef.evolution_chain.url; 
+    let evolutionChainUrl = await pokemonSpeciesRef.evolution_chain.url;
     let evolutionData = await getEvolutionData(evolutionChainUrl);
     return await evolutionData.chain;
 }
@@ -180,7 +182,7 @@ function nextPokemon(id) {
 }
 
 function checkNextPokemon(id) {
-    if (!CurrentPokemonData[id-1]) {
+    if (!CurrentPokemonData[id - 1]) {
         increasePokeCount().then(() => {
             renderCardInfo(id);
         });
