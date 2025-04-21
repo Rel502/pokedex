@@ -95,26 +95,6 @@ function convertFirstLetterUp(string) {
     return firstLetter + elseLetters;
 }
 
-async function increasePokeCount() {
-    let loadAmount = updateLoadAmount();
-    if (loadAmount === 0) return;
-
-    await loadPokemon(loadedCount, loadAmount);
-    loadedCount += loadAmount;
-
-    checkLoadedCount();
-}
-
-function updateLoadAmount() {
-    if (loadedCount >= 151) {
-        return 0;
-    } else if (loadedCount < 131) {
-        return 20;
-    } else {
-        return 151 - loadedCount;
-    }
-}
-
 function checkLoadedCount() {
     if (loadedCount >= 151) {
         toggleBtn('loadMoreBtn', 'hide');

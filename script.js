@@ -1,4 +1,5 @@
 async function init() {
+    await loadAllNames(); // <-- load all names ref and url ref from pokemon?limit=151
     await loadPokemon(loadedCount, 20);
     loadedCount += 20;
 }
@@ -30,7 +31,6 @@ async function loadPokemon(startIndex, count) {
         AllPokemonData.push(pokemonRef);
     }
     
-    loadAllNames(); // <-- load all names ref and url ref from pokemon?limit=151
     hideSpinner();
     renderCards();
 }
@@ -54,22 +54,23 @@ function renderCards() {
     CurrentPokemonData = AllPokemonData;
 
     for (let i = 0; i < CurrentPokemonData.length; i++) {
-        let [name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
+        let [id, name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
 
-        content.innerHTML += generateCard(i + 1, name, pokemonImg, bgColor)
-        renderTypeImages(`typesContainer${i + 1}`, allTypes);
+        content.innerHTML += generateCard(id, name, pokemonImg, bgColor)
+        renderTypeImages(`typesContainer${id}`, allTypes);
     }
 }
 
 function prepareRendering(i) {
     let pRef = CurrentPokemonData[i];
+    let id = pRef.id;
     let name = pRef.name;
     let pokemonImg = getPokemonImg(pRef);
     let allTypes = getPokemonTypes(pRef);
     let mainType = getMainType(allTypes);
     let bgColor = setBgColor(mainType);
 
-    return [name, pokemonImg, bgColor, allTypes];
+    return [id, name, pokemonImg, bgColor, allTypes];
 }
 
 async function renderCardInfo(id) {
@@ -87,7 +88,7 @@ async function renderCardInfo(id) {
 }
 
 async function prepareCardInfoRendering(id) {
-    let pRef = CurrentPokemonData[id - 1];
+    let pRef = CurrentPokemonData.find(p => p.id === Number(id));
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
     let pokemonDescr = getDescription(pokemonDescrRef);
@@ -212,9 +213,42 @@ function checkNextPokemon(id) {
 function previousPokemon(id) {
     id--;
     if (!id < 1) {
+        CurrentPokemonData = AllPokemonData;
         renderCardInfo(id);
     } else {
         toggleBtn('prevPokemonBtn', 'hide');
         return;
+    }
+}
+
+// function checkIfIdExistsInCurrentData(id) {
+//     // Prüfe, ob die ID größer ist als die Länge des Arrays
+//     if (id > CurrentPokemonData.length) {
+//         console.log(`Die ID ${id} ist größer als die Länge des Arrays. Pokémon muss nachgeladen werden.`);
+//         return false;  // Die ID ist zu groß und das Pokémon muss nachgeladen werden
+//     } else {
+//         console.log(`Die ID ${id} existiert bereits in CurrentPokemonData.`);
+//         return true;  // Die ID existiert bereits im Array
+//     }
+// }
+
+
+async function increasePokeCount() {
+    let loadAmount = updateLoadAmount();
+    if (loadAmount === 0) return;
+
+    await loadPokemon(loadedCount, loadAmount);
+    loadedCount += loadAmount;
+
+    checkLoadedCount();
+}
+
+function updateLoadAmount() {
+    if (loadedCount >= 151) {
+        return 0;
+    } else if (loadedCount < 131) {
+        return 20;
+    } else {
+        return 151 - loadedCount;
     }
 }
