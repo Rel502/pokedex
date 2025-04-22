@@ -1,7 +1,6 @@
 async function init() {
     await loadAllNames(); // <-- load all names ref and url ref from pokemon?limit=151
     await loadPokemon(loadedCount, 20);
-    loadedCount += 20;
 }
 
 let AllPokemonData = [];
@@ -23,6 +22,18 @@ async function getData(path = "") {
     return responseToJson;
 }
 
+async function loadAllNames() {
+    let response = await getData(`pokemon?limit=151`);
+    let allNamesRef = response.results;
+
+    for (let i = 0; i < 151; i++) {
+        let element = allNamesRef[i];
+        AllNamesArr.push(element);
+    }
+
+    console.log(AllNamesArr);
+}
+
 async function loadPokemon(startIndex, count) {
     showSpinner();
 
@@ -30,21 +41,9 @@ async function loadPokemon(startIndex, count) {
         let pokemonRef = await getData(`pokemon/${i + 1}`);
         AllPokemonData.push(pokemonRef);
     }
-    
+
     hideSpinner();
     renderCards();
-}
-
-async function loadAllNames() {
-    let response = await getData(`pokemon?limit=151`);
-    let allNamesRef = response.results;
-    
-    for (let i = 0; i < 151; i++) {
-        let element = allNamesRef[i];
-        AllNamesArr.push(element);
-    }
-
-    console.log(AllNamesArr);
 }
 
 function renderCards() {
@@ -213,32 +212,39 @@ function checkNextPokemon(id) {
 function previousPokemon(id) {
     id--;
     if (!id < 1) {
-        CurrentPokemonData = AllPokemonData;
-        renderCardInfo(id);
+        // CurrentPokemonData = AllPokemonData;
+        if (!CurrentPokemonData[id - 1]) {
+            loadAndShowSinglePokemon(id);
+            return;
+        } else {
+            renderCardInfo(id);
+        }
     } else {
         toggleBtn('prevPokemonBtn', 'hide');
         return;
     }
 }
 
-// function checkIfIdExistsInCurrentData(id) {
-//     // Prüfe, ob die ID größer ist als die Länge des Arrays
-//     if (id > CurrentPokemonData.length) {
-//         console.log(`Die ID ${id} ist größer als die Länge des Arrays. Pokémon muss nachgeladen werden.`);
-//         return false;  // Die ID ist zu groß und das Pokémon muss nachgeladen werden
-//     } else {
-//         console.log(`Die ID ${id} existiert bereits in CurrentPokemonData.`);
-//         return true;  // Die ID existiert bereits im Array
-//     }
-// }
+async function loadAndShowSinglePokemon(id) {
+    let targetIndex = id - 1;
+    console.log(targetIndex);
+    
+    let pRef = await getDataFromUrl(AllNamesArr[targetIndex].url);
+    let newId = pRef.id;
 
+    CurrentPokemonData.push(pRef);
+
+    renderCardInfo(newId);
+    // -> !Problem -> rendering über CurrentPokemonData
+    // -> individuell innerhalb dieser Fnc rendern!
+}
 
 async function increasePokeCount() {
     let loadAmount = updateLoadAmount();
     if (loadAmount === 0) return;
 
-    await loadPokemon(loadedCount, loadAmount);
     loadedCount += loadAmount;
+    await loadPokemon(loadedCount, loadAmount);
 
     checkLoadedCount();
 }
