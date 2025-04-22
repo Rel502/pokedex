@@ -133,11 +133,11 @@ function generateCardEvolution(id) {
 `;
 }
 
-function generateEvolutionStages(currentStage) {
+function generateEvolutionStages(pRef, pImg) {
     return /*html*/`
     <div>
-        <img class="stage-icon" src="./assets/icons/stage_${currentStage.index}.png" alt="First">
-        ${convertFirstLetterUp(currentStage.name)}
+        <img class="card-image-top" src=${pImg} alt="First">
+        ${convertFirstLetterUp(pRef.name)}
     </div>
 `;
 }

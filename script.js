@@ -119,76 +119,142 @@ function prepareStatsRendering(id) {
     }
 }
 
-async function renderCardEvolution(id) {
+// --------------------> EVOLUTION CHAIN
+
+function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
 
     content.innerHTML += generateCardEvolution(id);
 
-    await prepareEvolutionRendering(id);
+    prepareEvolutionRendering(id, content);
 }
 
-async function prepareEvolutionRendering(id) {
-    let evolutionChainRef = await getEvolutionChainRef(id);
-    let evolutionStages = await getEvolutionStages(evolutionChainRef);
+async function prepareEvolutionRendering(id, content) {
+    let evoChainRef = await getEvoChainRef(id);
+    let EvolutionStages = await getEvolutionData(evoChainRef);
 
-    let content = document.getElementById('evolutionContainer');
-    content.innerHTML = '';
+    for (let i = 0; i < EvolutionStages.length; i++) {
+        let stageIndex = EvolutionStages[i].url.slice(-2, -1); // <-- Zugriff auf die einzelnen Stages
+        let pRef = await getData(`pokemon/${stageIndex}`);
+        let pImg = getPokemonImg(pRef);
 
-    for (let i = 0; i < evolutionStages.length; i++) {
-        let currentStage = evolutionStages[i];
-        content.innerHTML += generateEvolutionStages(currentStage);
+        content.innerHTML += generateEvolutionStages(pRef, pImg);
     }
 }
 
-async function getEvolutionChainRef(id) {
-    let pokemonSpeciesRef = await getData(`pokemon-species/${id}`);
-    let evolutionChainUrl = await pokemonSpeciesRef.evolution_chain.url;
-    let evolutionData = await getEvolutionData(evolutionChainUrl);
-    return await evolutionData.chain;
+async function getEvoChainRef(id) {
+    let pRef = await getData(`pokemon-species/${id}`);
+    let evoChainUrl = pRef['evolution_chain']['url'].slice(-18);
+
+    // -> Wenn id zweistellig, dann -> -19
+    // -> Wenn id dreistellig, dann -> -20
+
+    // || -> von vorne "slicen"
+
+    let evoChainData = await getData(evoChainUrl);
+    return evoChainData.chain;
 }
 
-async function getEvolutionData(evolutionChainUrl) {
-    let response = await fetch(evolutionChainUrl);
-    let responseToJson = await response.json();
-    return responseToJson;
-}
+async function getEvolutionData(evoChainRef) {
+    let stages = [], current = evoChainRef;
 
-async function getEvolutionStages(evolutionChainRef) {
-    let evolutionStages = [];
-    evolutionStages.push(insertFirstStageOfEvolution(evolutionChainRef));
-    return addRemainingStages(evolutionChainRef.evolves_to, evolutionStages, 1);
-}
+    while (current) {
+        stages.push({
+            name: current.species.name,
+            url: current.species.url
+        });
 
-function addRemainingStages(evolves_to, stages, stageIndex) {
-    while (evolvesToNotEmpty(evolves_to)) {
-        const current = evolves_to[0];
-        stages.push(insertRestOfEvolutionStages(current, stageIndex));
-        evolves_to = current.evolves_to;
-        stageIndex++;
+        current = current.evolves_to[0] || null;
     }
+
     return stages;
 }
 
-function insertRestOfEvolutionStages(currentStage, stageIndex) {
-    return ({
-        index: stageIndex,
-        name: currentStage.species.name,
-        url: currentStage.species.url,
-    });
-}
 
-function evolvesToNotEmpty(evolves_to) {
-    return evolves_to.length !== 0;
-}
 
-function insertFirstStageOfEvolution(evolutionChainRef) {
-    return ({
-        index: 0,
-        name: evolutionChainRef.species.name,
-        url: evolutionChainRef.species.url,
-    })
-};
+
+// evoChainRef.chain.species.name <--- Name des aktuellen Pokemons
+// evoChainRef.chain.species.url  <--- Url des aktuellen Pokemons
+
+// evoChainRef.chain.evolves_to[0]species.name <--- Name des nächsten Pokemon
+// evoChainRef.chain.evolves_to[0]species.url <--- Url des nächsten Pokemon
+
+// evoChainRef.chain.evolves_to[0]evolves_to[0]species.name <--- Name des übernächsten Pokemon
+// ...
+
+
+// async function prepareEvolutionRendering(id) {
+//     let evolutionChainRef = await getEvolutionChainRef(id);
+//     let evolutionStages = await getEvolutionStages(evolutionChainRef);
+
+//     let content = document.getElementById('evolutionContainer');
+//     content.innerHTML = '';
+
+//     for (let i = 0; i < evolutionStages.length; i++) {
+//         let currentStage = evolutionStages[i];
+//         content.innerHTML += generateEvolutionStages(currentStage);
+//     }
+// }
+
+// async function getEvolutionChainRef(id) {
+//     let pokemonSpeciesRef = await getData(`pokemon-species/${id}`);
+//     let evolutionChainUrl = await pokemonSpeciesRef.evolution_chain.url;
+//     let evolutionData = await getEvolutionData(evolutionChainUrl);
+//     return await evolutionData.chain;
+// }
+
+// async function getEvolutionData(evolutionChainUrl) {
+//     let response = await fetch(evolutionChainUrl);
+//     let responseToJson = await response.json();
+//     return responseToJson;
+// }
+
+// async function getEvolutionStages(evolutionChainRef) {
+//     let evolutionStages = [];
+//     evolutionStages.push(insertFirstStageOfEvolution(evolutionChainRef));
+//     return addRemainingStages(evolutionChainRef.evolves_to, evolutionStages, 1);
+// }
+
+// function addRemainingStages(evolves_to, stages, stageIndex) {
+//     while (evolvesToNotEmpty(evolves_to)) {
+//         const current = evolves_to[0];
+//         stages.push(insertRestOfEvolutionStages(current, stageIndex));
+//         evolves_to = current.evolves_to;
+//         stageIndex++;
+//     }
+//     return stages;
+// }
+
+// function insertRestOfEvolutionStages(currentStage, stageIndex) {
+//     return ({
+//         index: stageIndex,
+//         name: currentStage.species.name,
+//         url: currentStage.species.url,
+//     });
+// }
+
+// function evolvesToNotEmpty(evolves_to) {
+//     return evolves_to.length !== 0;
+// }
+
+// function insertFirstStageOfEvolution(evolutionChainRef) {
+//     return ({
+//         index: 0,
+//         name: evolutionChainRef.species.name,
+//         url: evolutionChainRef.species.url,
+//     })
+// };
+
+
+
+
+
+
+
+
+
+
 
 function nextPokemon(id) {
     if (id < 151) {
@@ -228,7 +294,7 @@ function previousPokemon(id) {
 async function loadAndShowSinglePokemon(id) {
     let targetIndex = id - 1;
     console.log(targetIndex);
-    
+
     let pRef = await getDataFromUrl(AllNamesArr[targetIndex].url);
     let newId = pRef.id;
 
