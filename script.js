@@ -35,15 +35,23 @@ async function loadAllNames() {
 // Loads detailed data for a batch of Pokémon and renders them
 async function loadPokemon(startIndex, count) {
     showSpinner();
+    let Promises = [];
 
     for (let i = startIndex; i < startIndex + count; i++) {
-        let pokemonRef = await getData(`pokemon/${i + 1}`);
-        AllPokemonData.push(pokemonRef);
+        let pokemonRef = getData(`pokemon/${i + 1}`);
+        Promises.push(pokemonRef);
     }
-    
-    loadedCount += count;
-    hideSpinner();
-    renderCards();
+
+    try {
+        let results = await Promise.all(Promises);
+        AllPokemonData.push(...results);
+        loadedCount += count;
+        renderCards();
+    } catch (error) {
+        console.error('Fehler beim Laden von Pokémon:', error);
+    } finally {
+        hideSpinner();
+    }
 }
 
 // Renders all Pokémon cards currently in memory

@@ -1,24 +1,35 @@
 function filterAndShowNames() {
     let searchValue = getSearchValue();
 
+    handleFilteredResults(searchValue);
+
+    if (searchValue.length < 3) {
+        showAllPokemon();
+    }
+}
+
+function handleFilteredResults(searchValue) {
     if (searchValue.length >= 3) {
-        let filtered = AllNamesArr.filter((pokemon) => 
+        let filtered = AllNamesArr.filter((pokemon) =>
             pokemon.name.toLowerCase().includes(searchValue.toLowerCase()));
 
         if (filtered.length > 0) {
-            showFilteredPokemon(filtered); 
+            showFilteredPokemon(filtered);
             toggleBtn('loadMoreBtn', 'hide');
         }
-    } else {
-        CurrentPokemonData = AllPokemonData;
-        renderCards();
-        toggleBtn('loadMoreBtn', 'show');
     }
+}
+
+function showAllPokemon() {
+    CurrentPokemonData = AllPokemonData;
+    renderCards();
+    toggleBtn('loadMoreBtn', 'show');
 }
 
 async function showFilteredPokemon(filteredList) {
     let content = document.getElementById('content');
     content.innerHTML = '';
+
     let filteredData = [];
 
     for (let i = 0; i < filteredList.length; i++) {
@@ -28,7 +39,7 @@ async function showFilteredPokemon(filteredList) {
 
     CurrentPokemonData = filteredData;
 
-    for (let i = 0; i < CurrentPokemonData.length; i++) {
+    for (let i = 0; i < filteredData.length; i++) {
         let [id, name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
 
         content.innerHTML += generateCard(id, name, pokemonImg, bgColor);
