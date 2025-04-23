@@ -1,27 +1,27 @@
+// Initializes the app by loading all Pokémon names and the first 20 Pokémon
 async function init() {
-    await loadAllNames(); // <-- load all names ref and url ref from pokemon?limit=151
+    await loadAllNames();
     await loadPokemon(loadedCount, 20);
 }
 
 let AllPokemonData = [];
 let CurrentPokemonData = [];
-
 let AllNamesArr = [];
 // -> AllNamesArr[i].name -> "bulbasaur"
 // -> AllNamesArr[i].url -> "https://pokeapi.co/api/v2/pokemon/1/"
-
-let CurrentNamesArr = [];
 
 let loadedCount = 0;
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
+// Fetches data from a given API path
 async function getData(path = "") {
     let response = await fetch(BASE_URL + path);
     let responseToJson = await response.json();
     return responseToJson;
 }
 
+// Loads names and URLs of all 151 Pokémon into AllNamesArr
 async function loadAllNames() {
     let response = await getData(`pokemon?limit=151`);
     let allNamesRef = response.results;
@@ -32,6 +32,7 @@ async function loadAllNames() {
     }
 }
 
+// Loads detailed data for a batch of Pokémon and renders them
 async function loadPokemon(startIndex, count) {
     showSpinner();
 
@@ -39,11 +40,13 @@ async function loadPokemon(startIndex, count) {
         let pokemonRef = await getData(`pokemon/${i + 1}`);
         AllPokemonData.push(pokemonRef);
     }
-
+    
+    loadedCount += count;
     hideSpinner();
     renderCards();
 }
 
+// Renders all Pokémon cards currently in memory
 function renderCards() {
     let content = document.getElementById('content');
     content.innerHTML = "";
@@ -58,6 +61,7 @@ function renderCards() {
     }
 }
 
+// Prepares data needed for rendering a Pokémon card
 function prepareRendering(i) {
     let pRef = CurrentPokemonData[i];
     let id = pRef.id;
@@ -70,6 +74,7 @@ function prepareRendering(i) {
     return [id, name, pokemonImg, bgColor, allTypes];
 }
 
+// Renders the popup with detailed Pokémon info
 async function renderCardInfo(id) {
     showPopup();
 
@@ -84,10 +89,13 @@ async function renderCardInfo(id) {
     renderTypeImages(`typesContainerDescr${id}`, allTypes);
 }
 
+// Prepares data needed for the info popup of a Pokémon
 async function prepareCardInfoRendering(id) {
     let pRef = CurrentPokemonData.find(p => p.id === Number(id));
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
+    console.log(pokemonDescrRef);
+    
     let pokemonDescr = getDescription(pokemonDescrRef);
     let pokemonImg = getPokemonImg(pRef);
     let allTypes = getPokemonTypes(pRef);
@@ -97,6 +105,7 @@ async function prepareCardInfoRendering(id) {
     return [pokemonImg, name, mainType, pokemonDescr, bgColor, allTypes];
 }
 
+// Renders Pokémon base stats in the popup
 async function renderCardStats(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
@@ -104,6 +113,7 @@ async function renderCardStats(id) {
     prepareStatsRendering(id);
 }
 
+// Prepares and renders stat progress bars
 function prepareStatsRendering(id) {
     let pRef = CurrentPokemonData[id - 1];
     let statsRef = pRef.stats;
@@ -117,23 +127,21 @@ function prepareStatsRendering(id) {
     }
 }
 
-// --------------------> EVOLUTION CHAIN
-
+// Renders the evolution section in the popup
 function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
-
     content.innerHTML = '';
     content.innerHTML += generateCardEvolution(id);
-
     prepareEvolutionRendering(id, content);
 }
 
+// Fetches and prepares data for rendering evolution stages
 async function prepareEvolutionRendering(id, content) {
     let evoChainRef = await getEvoChainRef(id);
     let EvolutionStages = await getEvolutionData(evoChainRef);
 
     for (let i = 0; i < EvolutionStages.length; i++) {
-        let stageIndex = EvolutionStages[i].url.slice(42 -1); // <-- Extract stage ID
+        let stageIndex = EvolutionStages[i].url.slice(42 -1); // Extract stage ID
         let pRef = await getData(`pokemon/${stageIndex}`);
         let pImg = getPokemonImg(pRef);
 
@@ -141,15 +149,15 @@ async function prepareEvolutionRendering(id, content) {
     }
 }
 
+// Gets the evolution chain reference data
 async function getEvoChainRef(id) {
     let pRef = await getData(`pokemon-species/${id}`);
     let evoChainUrl = pRef['evolution_chain']['url'].slice(26);
-    // -> https://pokeapi.co/api/v2/evolution-chain/1/
-
     let evoChainData = await getData(evoChainUrl);
     return evoChainData.chain;
 }
 
+// Traverses and collects evolution stages from the evolution chain
 async function getEvolutionData(evoChainRef) {
     let stages = [], current = evoChainRef;
 
@@ -164,6 +172,7 @@ async function getEvolutionData(evoChainRef) {
     return stages;
 }
 
+// Shows the next Pokémon, loads it if not already loaded
 function nextPokemon(id) {
     if (id < 151) {
         id++;
@@ -173,6 +182,7 @@ function nextPokemon(id) {
     checkNextPokemon(id);
 }
 
+// Loads and shows next Pokémon if not already in memory
 function checkNextPokemon(id) {
     if (!CurrentPokemonData[id - 1]) {
         increasePokeCount().then(() => {
@@ -183,6 +193,7 @@ function checkNextPokemon(id) {
     }
 }
 
+// Shows the previous Pokémon, loads it if necessary
 function previousPokemon(id) {
     id--;
     if (!id < 1) {
@@ -198,6 +209,7 @@ function previousPokemon(id) {
     }
 }
 
+// Loads a single Pokémon if not already loaded
 async function loadAndShowSinglePokemon(id) {
     let targetIndex = id - 1;
     console.log(targetIndex);
@@ -209,16 +221,19 @@ async function loadAndShowSinglePokemon(id) {
     renderCardInfo(newId);
 }
 
+// Increases the number of loaded Pokémon if under 151
 async function increasePokeCount() {
     let loadAmount = updateLoadAmount();
     if (loadAmount === 0) return;
 
-    loadedCount += loadAmount;
+    // loadedCount += loadAmount;
+
     await loadPokemon(loadedCount, loadAmount);
 
     checkLoadedCount();
 }
 
+// Determines how many Pokémon to load next
 function updateLoadAmount() {
     if (loadedCount >= 151) {
         return 0;
