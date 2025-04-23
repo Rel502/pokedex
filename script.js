@@ -115,7 +115,8 @@ async function renderCardStats(id) {
 
 // Prepares and renders stat progress bars
 function prepareStatsRendering(id) {
-    let pRef = CurrentPokemonData[id - 1];
+    let pRef = CurrentPokemonData.find(p => p.id === Number(id));
+    // let pRef = CurrentPokemonData[id - 1];
     let statsRef = pRef.stats;
 
     for (let statsIndex = 0; statsIndex < statsRef.length; statsIndex++) {
@@ -184,13 +185,14 @@ function nextPokemon(id) {
 
 // Loads and shows next Pokémon if not already in memory
 function checkNextPokemon(id) {
-    if (!CurrentPokemonData[id - 1]) {
-        increasePokeCount().then(() => {
+    if (!id < 1) {
+        if (!CurrentPokemonData[id - 1]) {
+            loadAndShowSinglePokemon(id);
+            return;
+        } else {
             renderCardInfo(id);
-        });
-    } else {
-        renderCardInfo(id);
-    }
+        }
+    } 
 }
 
 // Shows the previous Pokémon, loads it if necessary
