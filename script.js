@@ -102,8 +102,6 @@ async function prepareCardInfoRendering(id) {
     let pRef = CurrentPokemonData.find(p => p.id === Number(id));
     let name = pRef.name;
     let pokemonDescrRef = await getData(`pokemon-species/${id}`);
-    console.log(pokemonDescrRef);
-    
     let pokemonDescr = getDescription(pokemonDescrRef);
     let pokemonImg = getPokemonImg(pRef);
     let allTypes = getPokemonTypes(pRef);
@@ -222,7 +220,6 @@ function previousPokemon(id) {
 // Loads a single Pokémon if not already loaded
 async function loadAndShowSinglePokemon(id) {
     let targetIndex = id - 1;
-    console.log(targetIndex);
 
     let pRef = await getDataFromUrl(AllNamesArr[targetIndex].url);
     let newId = pRef.id;
@@ -235,8 +232,6 @@ async function loadAndShowSinglePokemon(id) {
 async function increasePokeCount() {
     let loadAmount = updateLoadAmount();
     if (loadAmount === 0) return;
-
-    // loadedCount += loadAmount;
 
     await loadPokemon(loadedCount, loadAmount);
 
