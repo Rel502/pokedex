@@ -14,7 +14,7 @@ function filterAndShowNames() {
 // Handles filtered search results if input is 3+ characters
 function handleFilteredResults(searchValue) {
     if (searchValue.length >= 3) {
-        const currentToken = ++latestSearchToken; // neue Suchanfrage
+        const currentToken = ++latestSearchToken; 
 
         let filtered = getFilteredUniquePokemon(searchValue);
 
@@ -46,7 +46,6 @@ async function showFilteredPokemon(filtered, token) {
 
     let FilteredData = await loadFilteredPokemon(filtered);
 
-    // Stelle sicher, dass diese Antwort noch aktuell ist
     if (token !== latestSearchToken) return;
 
     CurrentPokemonData = FilteredData;
