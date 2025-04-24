@@ -1,3 +1,4 @@
+// Entry point: filters or shows all Pokémon based on search length
 function filterAndShowNames() {
     let searchValue = getSearchValue();
 
@@ -8,17 +9,10 @@ function filterAndShowNames() {
     }
 }
 
+// Handles filtered search results if input is 3+ characters
 function handleFilteredResults(searchValue) {
     if (searchValue.length >= 3) {
-        let seenNames = new Set();
-        let filtered = AllNamesArr.filter((pokemon) => {
-            let name = pokemon.name.toLowerCase();
-            if (name.includes(searchValue.toLowerCase()) && !seenNames.has(name)) {
-                seenNames.add(name);
-                return true;
-            }
-            return false;
-        });
+        let filtered = getFilteredUniquePokemon(searchValue);
 
         if (filtered.length > 0) {
             showFilteredPokemon(filtered);
@@ -27,6 +21,20 @@ function handleFilteredResults(searchValue) {
     }
 }
 
+// Filters Pokémon names and removes duplicates
+function getFilteredUniquePokemon(searchValue) {
+    let seenNames = new Set();
+    return AllNamesArr.filter((pokemon => {
+        let name = pokemon.name.toLowerCase();
+        if (name.includes(searchValue.toLowerCase()) && !seenNames.has(name)) {
+            seenNames.add(name);
+            return true;
+        }
+        return false;
+    }))
+}
+
+// Loads and renders the filtered Pokémon
 async function showFilteredPokemon(filtered) {
     let content = document.getElementById('content');
     content.innerHTML = '';
@@ -37,6 +45,7 @@ async function showFilteredPokemon(filtered) {
     renderCurrentPokemonData(content);
 }
 
+// Renders all currently loaded Pokémon into the container
 function renderCurrentPokemonData(container) {
     for (let i = 0; i < CurrentPokemonData.length; i++) {
         let [id, name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
@@ -46,6 +55,7 @@ function renderCurrentPokemonData(container) {
     }
 }
 
+// Loads detailed data for all filtered Pokémon
 async function loadFilteredPokemon(filtered) {
     let requests = [];
     for (let i = 0; i < filtered.length; i++) {
@@ -56,16 +66,19 @@ async function loadFilteredPokemon(filtered) {
     return data;
 }
 
+// Renders the complete list of all Pokémon
 function showAllPokemon() {
     CurrentPokemonData = AllPokemonData;
     renderCards();
     toggleBtn('loadMoreBtn', 'show');
 }
 
+// Fetches JSON data from given URL
 function getDataFromUrl(url) {
     return fetch(url).then(res => res.json());
 }
 
+// Gets and trims the current search input value
 function getSearchValue() {
     let searchValue = document.getElementById('search').value;
     searchValue = searchValue.trim();
