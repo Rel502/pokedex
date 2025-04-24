@@ -78,6 +78,12 @@
     }
 }
 
+@media (min-width: 1441px) {
+    .overlay-outer-div {
+        max-width: 720px;
+    }
+}
+
 .overlay-img-container {
     position: relative;
     padding: 16px;

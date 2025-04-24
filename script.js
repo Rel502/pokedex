@@ -139,7 +139,7 @@ function renderCardEvolution(id) {
     let content = document.getElementById(`overlayContent${id}`);
     content.innerHTML = '';
     content.innerHTML += generateCardEvolution(id);
-    prepareEvolutionRendering(id, content);
+    prepareEvolutionRendering(id);
 }
 
 // Fetches and prepares data for rendering evolution stages
