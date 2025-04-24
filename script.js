@@ -143,7 +143,7 @@ function renderCardEvolution(id) {
 }
 
 // Fetches and prepares data for rendering evolution stages
-async function prepareEvolutionRendering(id, content) {
+async function prepareEvolutionRendering(id) {
     let evoChainRef = await getEvoChainRef(id);
     let EvolutionStages = await getEvolutionData(evoChainRef);
 
@@ -152,6 +152,7 @@ async function prepareEvolutionRendering(id, content) {
         let pRef = await getData(`pokemon/${stageIndex}`);
         let pImg = getPokemonImg(pRef);
 
+        let content = document.getElementById('evolutionContainer');
         content.innerHTML += generateEvolutionStages(pRef, pImg);
     }
 }
