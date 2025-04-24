@@ -84,6 +84,7 @@ function generateCardDescription(id, pokemonImg, pokemonName, mainType, pokemonD
                  </div>
             </section>
         </div>
+
     `;
 }
 
