@@ -1,3 +1,5 @@
+let latestSearchToken = 0;
+
 // Entry point: filters or shows all Pokémon based on search length
 function filterAndShowNames() {
     let searchValue = getSearchValue();
@@ -12,14 +14,17 @@ function filterAndShowNames() {
 // Handles filtered search results if input is 3+ characters
 function handleFilteredResults(searchValue) {
     if (searchValue.length >= 3) {
+        const currentToken = ++latestSearchToken; // neue Suchanfrage
+
         let filtered = getFilteredUniquePokemon(searchValue);
 
         if (filtered.length > 0) {
-            showFilteredPokemon(filtered);
+            showFilteredPokemon(filtered, currentToken);
             toggleBtn('loadMoreBtn', 'hide');
         }
     }
 }
+
 
 // Filters Pokémon names and removes duplicates
 function getFilteredUniquePokemon(searchValue) {
@@ -35,13 +40,16 @@ function getFilteredUniquePokemon(searchValue) {
 }
 
 // Loads and renders the filtered Pokémon
-async function showFilteredPokemon(filtered) {
+async function showFilteredPokemon(filtered, token) {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
     let FilteredData = await loadFilteredPokemon(filtered);
-    CurrentPokemonData = FilteredData;
 
+    // Stelle sicher, dass diese Antwort noch aktuell ist
+    if (token !== latestSearchToken) return;
+
+    CurrentPokemonData = FilteredData;
     renderCurrentPokemonData(content);
 }
 
