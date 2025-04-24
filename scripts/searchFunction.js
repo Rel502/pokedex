@@ -31,21 +31,29 @@ async function showFilteredPokemon(filtered) {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
-    let FilteredData = [];
-
-    for (let i = 0; i < filtered.length; i++) {
-        let pRef = await getDataFromUrl(filtered[i].url);
-        FilteredData.push(pRef);
-    }
-
+    let FilteredData = await loadFilteredPokemon(filtered);
     CurrentPokemonData = FilteredData;
 
+    renderCurrentPokemonData(content);
+}
+
+function renderCurrentPokemonData(container) {
     for (let i = 0; i < CurrentPokemonData.length; i++) {
         let [id, name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
 
-        content.innerHTML += generateCard(id, name, pokemonImg, bgColor);
+        container.innerHTML += generateCard(id, name, pokemonImg, bgColor);
         renderTypeImages(`typesContainer${id}`, allTypes);
     }
+}
+
+async function loadFilteredPokemon(filtered) {
+    let requests = [];
+    for (let i = 0; i < filtered.length; i++) {
+        let pRef = getDataFromUrl(filtered[i].url);
+        requests.push(pRef);
+    }
+    let data = await Promise.all(requests);
+    return data;
 }
 
 function showAllPokemon() {
