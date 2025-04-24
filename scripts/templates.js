@@ -102,7 +102,7 @@ function generateCardStats(id) {
     </ul>
 
     <div class="card-details-container">
-        <h2>Statuswerte</h2>
+        
         <div id="statsContainer" class="stats-container">
             <!-- rendering stats... -->
         </div>
@@ -125,7 +125,7 @@ function generateCardEvolution(id) {
     </ul>
 
     <div class="card-details-container">
-        <h2>Entwicklungen</h2>
+        
         <div id="evolutionContainer" class="evolution-container">
             <!-- rendering evolution-chain... -->
         </div>
@@ -136,8 +136,9 @@ function generateCardEvolution(id) {
 function generateEvolutionStages(pRef, pImg) {
     return /*html*/`
     <div>
-        <img class="card-image-top" src=${pImg} alt="First">
-        ${convertFirstLetterUp(pRef.name)}
+        <h5>${convertFirstLetterUp(pRef.name)}</h5>
+        <img class="evolution-img" src=${pImg} alt="First">
+        
     </div>
 `;
 }

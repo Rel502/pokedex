@@ -38,11 +38,18 @@ function renderTypeImages(container, allTypes) {
     }
 }
 
-// Retrieves the Pokémon's default front sprite image
+// // Retrieves the Pokémon's default front sprite image
+// function getPokemonImg(pRef) {
+//     let pokemonImg = pRef['sprites']['front_default'];
+//     return pokemonImg;
+// }
+
+// Retrieves the Pokémon's official artwork image
 function getPokemonImg(pRef) {
-    let pokemonImg = pRef['sprites']['front_default'];
+    let pokemonImg = pRef['sprites']['other']['official-artwork']['front_default'];
     return pokemonImg;
 }
+
 
 // Gets the German description for the Pokémon species
 function getDescription(species) {
