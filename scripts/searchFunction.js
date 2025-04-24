@@ -10,8 +10,15 @@ function filterAndShowNames() {
 
 function handleFilteredResults(searchValue) {
     if (searchValue.length >= 3) {
-        let filtered = AllNamesArr.filter((pokemon) =>
-            pokemon.name.toLowerCase().includes(searchValue.toLowerCase()));
+        let seenNames = new Set();
+        let filtered = AllNamesArr.filter((pokemon) => {
+            let name = pokemon.name.toLowerCase();
+            if (name.includes(searchValue.toLowerCase()) && !seenNames.has(name)) {
+                seenNames.add(name);
+                return true;
+            }
+            return false;
+        });
 
         if (filtered.length > 0) {
             showFilteredPokemon(filtered);
@@ -20,31 +27,31 @@ function handleFilteredResults(searchValue) {
     }
 }
 
-function showAllPokemon() {
-    CurrentPokemonData = AllPokemonData;
-    renderCards();
-    toggleBtn('loadMoreBtn', 'show');
-}
-
-async function showFilteredPokemon(filteredList) {
+async function showFilteredPokemon(filtered) {
     let content = document.getElementById('content');
     content.innerHTML = '';
 
-    let filteredData = [];
+    let FilteredData = [];
 
-    for (let i = 0; i < filteredList.length; i++) {
-        let pRef = await getDataFromUrl(filteredList[i].url);
-        filteredData.push(pRef);
+    for (let i = 0; i < filtered.length; i++) {
+        let pRef = await getDataFromUrl(filtered[i].url);
+        FilteredData.push(pRef);
     }
 
-    CurrentPokemonData = filteredData;
+    CurrentPokemonData = FilteredData;
 
-    for (let i = 0; i < filteredData.length; i++) {
+    for (let i = 0; i < CurrentPokemonData.length; i++) {
         let [id, name, pokemonImg, bgColor, allTypes] = prepareRendering(i);
 
         content.innerHTML += generateCard(id, name, pokemonImg, bgColor);
         renderTypeImages(`typesContainer${id}`, allTypes);
     }
+}
+
+function showAllPokemon() {
+    CurrentPokemonData = AllPokemonData;
+    renderCards();
+    toggleBtn('loadMoreBtn', 'show');
 }
 
 function getDataFromUrl(url) {
